@@ -19,14 +19,13 @@
 
 package com.github.stephenc.javaisotools.loopfs.udf;
 
-import com.github.stephenc.javaisotools.loopfs.api.FileEntry;
 import com.github.stephenc.javaisotools.loopfs.spi.VolumeDescriptorSet;
 
 import java.io.IOException;
 
-public class UDFVolumeDescriptorSet implements VolumeDescriptorSet {
+public class UDFVolumeDescriptorSet implements VolumeDescriptorSet<UDFFileEntry> {
 
-    private UDFFileSystem fs;
+    private final UDFFileSystem fs;
 
     public UDFVolumeDescriptorSet(UDFFileSystem fs) {
         this.fs = fs;
@@ -36,7 +35,7 @@ public class UDFVolumeDescriptorSet implements VolumeDescriptorSet {
         return false;
     }
 
-    public FileEntry getRootEntry() {
+    public UDFFileEntry getRootEntry() {
         return null;
     }
 }

@@ -27,7 +27,7 @@ import java.io.InputStream;
 
 public class DWordDataReference implements DataReference {
 
-    private long value = 0;
+    private final long value;
 
     public DWordDataReference(long value) {
         this.value = value;
@@ -38,7 +38,7 @@ public class DWordDataReference implements DataReference {
     }
 
     public InputStream createInputStream() throws IOException {
-        byte[] buffer = null;
+        byte[] buffer;
 
         buffer = new byte[8];
         buffer[0] = (byte) ((this.value & 0xFF00000000000000L) >> 56);

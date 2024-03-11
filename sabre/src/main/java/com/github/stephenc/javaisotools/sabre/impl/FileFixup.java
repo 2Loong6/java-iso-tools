@@ -32,9 +32,9 @@ import java.io.RandomAccessFile;
 public class FileFixup implements Fixup {
 
     // private File file = null;
-    private RandomAccessFile randomAccessFile = null;
-    private long position = 0;
-    private long available = 0;
+    private final RandomAccessFile randomAccessFile;
+    private long position;
+    private long available;
     private boolean closed = false;
 
     public FileFixup(RandomAccessFile file, long position, long available) {
@@ -44,9 +44,8 @@ public class FileFixup implements Fixup {
     }
 
     public void data(DataReference reference) throws HandlerException {
-        InputStream inputStream = null;
-        byte[] buffer = null;
-        int bytesRead = 0;
+        byte[] buffer;
+        int bytesRead;
 
         // Test if fixup is still open
         if (!closed) {
@@ -55,13 +54,13 @@ public class FileFixup implements Fixup {
             }
 
             // Write fixup into file
-            try {
+            try (InputStream inputStream = reference.createInputStream()) {
                 // Move to position in file
                 randomAccessFile.seek(this.position);
 
                 // Copy data reference to position
                 buffer = new byte[1024];
-                inputStream = reference.createInputStream();
+                ;
                 while ((bytesRead = inputStream.read(buffer, 0, 1024)) != -1) {
                     randomAccessFile.write(buffer, 0, bytesRead);
                 }
@@ -72,8 +71,6 @@ public class FileFixup implements Fixup {
 
                 // Close the fixup
                 // randomAccessFile.close();
-            } catch (FileNotFoundException e) {
-                throw new HandlerException(e);
             } catch (IOException e) {
                 throw new HandlerException(e);
             }

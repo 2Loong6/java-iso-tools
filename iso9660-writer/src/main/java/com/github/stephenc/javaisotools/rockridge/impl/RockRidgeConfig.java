@@ -26,6 +26,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @see <a href="https://en.wikipedia.org/wiki/ISO_9660#Rock_Ridge">Rock Ridge</a>
+ */
 public class RockRidgeConfig {
 
     private final Map<String, Integer> patternToModeMap = new HashMap<>();

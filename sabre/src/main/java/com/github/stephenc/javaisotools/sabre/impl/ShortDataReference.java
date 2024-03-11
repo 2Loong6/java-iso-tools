@@ -27,7 +27,7 @@ import java.io.InputStream;
 
 public class ShortDataReference implements DataReference {
 
-    private long value = 0;
+    private final long value;
 
     public ShortDataReference(long value) {
         this.value = value;
@@ -39,7 +39,7 @@ public class ShortDataReference implements DataReference {
     }
 
     public InputStream createInputStream() throws IOException {
-        byte[] buffer = null;
+        byte[] buffer;
 
         buffer = new byte[2];
         buffer[0] = (byte) ((this.value & 0xFF00) >> 8);

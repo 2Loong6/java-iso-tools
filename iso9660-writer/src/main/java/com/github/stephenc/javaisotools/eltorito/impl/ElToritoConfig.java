@@ -26,6 +26,9 @@ import com.github.stephenc.javaisotools.sabre.HandlerException;
 
 import java.io.File;
 
+/**
+ * @see <a href="https://en.wikipedia.org/wiki/ISO_9660#El_Torito">El Torito</a>
+ */
 public class ElToritoConfig extends BootConfig {
 
     public static int PLATFORM_ID_X86 = 0;

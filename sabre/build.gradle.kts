@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    api(libs.commons.lang3)
+    api(libs.commons.text)
     api(libs.ant)
 }

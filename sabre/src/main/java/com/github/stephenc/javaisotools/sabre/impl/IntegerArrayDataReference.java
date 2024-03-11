@@ -27,7 +27,7 @@ import java.io.InputStream;
 
 public class IntegerArrayDataReference implements DataReference {
 
-    private byte[] buffer = null;
+    private byte[] buffer;
 
     public IntegerArrayDataReference(int[] buffer) {
         this.buffer = new byte[buffer.length];

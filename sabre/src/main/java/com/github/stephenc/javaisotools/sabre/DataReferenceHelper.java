@@ -26,34 +26,34 @@ import java.io.OutputStream;
 public class DataReferenceHelper {
 
     public static void transfer(DataReference reference, OutputStream outputStream) throws IOException {
-        InputStream inputStream = null;
-        byte[] buffer = null;
-        int bytesToRead = 0;
-        int bytesHandled = 0;
+        byte[] buffer;
+        int bytesToRead;
+        int bytesHandled;
         int bufferLength = 65535;
-        long lengthToWrite = 0;
-        long length = 0;
+        long lengthToWrite;
+        long length;
 
-        buffer = new byte[bufferLength];
-        length = reference.getLength();
-        lengthToWrite = length;
-        inputStream = reference.createInputStream();
-        while (lengthToWrite > 0) {
-            if (lengthToWrite > bufferLength) {
-                bytesToRead = bufferLength;
-            } else {
-                bytesToRead = (int) lengthToWrite;
+        try (InputStream inputStream = reference.createInputStream()) {
+            buffer = new byte[bufferLength];
+            length = reference.getLength();
+            lengthToWrite = length;
+            while (lengthToWrite > 0) {
+                if (lengthToWrite > bufferLength) {
+                    bytesToRead = bufferLength;
+                } else {
+                    bytesToRead = (int) lengthToWrite;
+                }
+
+                bytesHandled = inputStream.read(buffer, 0, bytesToRead);
+
+                if (bytesHandled == -1) {
+                    throw new IOException();
+                }
+
+                outputStream.write(buffer, 0, bytesHandled);
+                lengthToWrite -= bytesHandled;
             }
-
-            bytesHandled = inputStream.read(buffer, 0, bytesToRead);
-
-            if (bytesHandled == -1) {
-                throw new IOException();
-            }
-
-            outputStream.write(buffer, 0, bytesHandled);
-            lengthToWrite -= bytesHandled;
+            outputStream.flush();
         }
-        outputStream.flush();
     }
 }

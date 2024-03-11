@@ -20,7 +20,7 @@
 package com.github.stephenc.javaisotools.sabre.impl;
 
 import com.github.stephenc.javaisotools.sabre.*;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -30,16 +30,16 @@ import java.util.Stack;
 
 public class XMLAtomHandler implements StreamHandler {
 
-    private ContentHandler contentHandler = null;
-    private String namespace = null;
-    private String prefix = null;
-    private Stack elements = null;
+    private final ContentHandler contentHandler;
+    private final String namespace;
+    private final String prefix;
+    private final Stack<Element> elements;
 
     public XMLAtomHandler(ContentHandler contentHandler, String namespace, String prefix) {
         this.contentHandler = contentHandler;
         this.namespace = namespace;
         this.prefix = prefix;
-        this.elements = new Stack();
+        this.elements = new Stack<>();
     }
 
     public void startDocument() throws HandlerException {
@@ -54,19 +54,18 @@ public class XMLAtomHandler implements StreamHandler {
         try {
             this.elements.push(element);
             this.contentHandler
-                    .startElement(this.namespace, element.toString(), this.prefix + ":" + element.toString(), null);
+                    .startElement(this.namespace, element.toString(), this.prefix + ":" + element, null);
         } catch (SAXException e) {
             throw new HandlerException(e);
         }
     }
 
     public void data(DataReference reference) throws HandlerException {
-        long showLength = 0;
+        long showLength;
 
-        try {
-            InputStream inputStream = null;
-            byte[] buffer = null;
-            String data = null;
+        try (InputStream inputStream = reference.createInputStream()) {
+            byte[] buffer;
+            String data;
             long length = reference.getLength();
 
             if (length > 32) {
@@ -76,7 +75,6 @@ public class XMLAtomHandler implements StreamHandler {
             }
 
             buffer = new byte[(int) showLength];
-            inputStream = reference.createInputStream();
             inputStream.read(buffer);
             inputStream.close();
 
@@ -100,11 +98,11 @@ public class XMLAtomHandler implements StreamHandler {
     }
 
     public void endElement() throws HandlerException {
-        Element element = null;
+        Element element;
 
         try {
-            element = (Element) this.elements.pop();
-            this.contentHandler.endElement(this.namespace, element.toString(), this.prefix + ":" + element.toString());
+            element = this.elements.pop();
+            this.contentHandler.endElement(this.namespace, element.toString(), this.prefix + ":" + element);
         } catch (SAXException e) {
             throw new HandlerException(e);
         }

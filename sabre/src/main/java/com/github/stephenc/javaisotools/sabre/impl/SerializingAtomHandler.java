@@ -25,14 +25,12 @@ import java.io.*;
 
 public class SerializingAtomHandler implements StreamHandler {
 
-    private File file = null;
-    private RandomAccessFile randomAccessFile = null;
+    private final RandomAccessFile randomAccessFile;
     // private DataOutputStream dataOutputStream = null;
     private long position = 0;
 
     public SerializingAtomHandler(File file) throws FileNotFoundException {
-        this.file = file;
-        this.randomAccessFile = new RandomAccessFile(this.file, "rw");
+        this.randomAccessFile = new RandomAccessFile(file, "rw");
         // this.dataOutputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(this.file)));
     }
 
@@ -48,19 +46,18 @@ public class SerializingAtomHandler implements StreamHandler {
     }
 
     public void data(DataReference reference) throws HandlerException {
-        InputStream inputStream = null;
-        byte[] buffer = null;
-        int bytesToRead = 0;
-        int bytesHandled = 0;
+        byte[] buffer;
+        int bytesToRead;
+        int bytesHandled;
         int bufferLength = 65535;
-        long lengthToWrite = 0;
-        long length = 0;
+        long lengthToWrite;
+        long length;
 
-        try {
+        try (InputStream inputStream = reference.createInputStream()) {
             buffer = new byte[bufferLength];
             length = reference.getLength();
             lengthToWrite = length;
-            inputStream = reference.createInputStream();
+
             this.randomAccessFile.seek(this.position);
             while (lengthToWrite > 0) {
                 if (lengthToWrite > bufferLength) {
@@ -86,20 +83,11 @@ public class SerializingAtomHandler implements StreamHandler {
             // dataOutputStream.flush();
         } catch (IOException e) {
             throw new HandlerException(e);
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                    inputStream = null;
-                }
-            } catch (IOException e) {
-            }
         }
     }
 
     public Fixup fixup(DataReference reference) throws HandlerException {
-        Fixup fixup = null;
-        fixup = new FileFixup(this.randomAccessFile, this.position, reference.getLength());
+        Fixup fixup = new FileFixup(this.randomAccessFile, this.position, reference.getLength());
         data(reference);
         return fixup;
     }

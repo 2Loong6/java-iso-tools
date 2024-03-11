@@ -32,7 +32,7 @@ import java.io.InputStream;
 
 public class LimitingInputStream extends FilterInputStream {
 
-    protected int limit = -1;
+    protected int limit;
 
     public LimitingInputStream(InputStream inputStream, int limit) {
         super(inputStream);
@@ -65,7 +65,7 @@ public class LimitingInputStream extends FilterInputStream {
         int result = -1;
 
         if (this.limit > 0) {
-            result = super.read(buffer, 0, (this.limit < buffer.length) ? this.limit : buffer.length);
+            result = super.read(buffer, 0, Math.min(this.limit, buffer.length));
         } else if (this.limit == -1) {
             result = super.read(buffer);
         }
@@ -81,7 +81,7 @@ public class LimitingInputStream extends FilterInputStream {
         int result = -1;
 
         if (this.limit > 0) {
-            result = super.read(buffer, position, (this.limit < length) ? this.limit : length);
+            result = super.read(buffer, position, Math.min(this.limit, length));
         } else if (this.limit == -1) {
             result = super.read(buffer, position, length);
         }
@@ -94,9 +94,7 @@ public class LimitingInputStream extends FilterInputStream {
     }
 
     public int available() throws IOException {
-        int available = 0;
-
-        available = super.available();
+        int available = super.available();
         if (this.limit != -1) {
             if (this.limit < available) {
                 available = this.limit;

@@ -29,10 +29,10 @@ import java.io.RandomAccessFile;
 
 public class SingleFileFixupList {
 
-    private static int fixupLength = 16;
-    private File originalIndexFile = null;
-    private RandomAccessFile indexFile = null;
-    private RandomAccessFile fixedFile = null;
+    private static final int fixupLength = 16;
+    private final File originalIndexFile;
+    private final RandomAccessFile indexFile;
+    private RandomAccessFile fixedFile;
     private int fixupCount = 0;
 
     public SingleFileFixupList(RandomAccessFile fixedFile, File indexFile) throws FileNotFoundException {
@@ -42,7 +42,7 @@ public class SingleFileFixupList {
     }
 
     public synchronized void addLast(Fixup fixup) {
-        FileFixup fileFixup = null;
+        FileFixup fileFixup;
 
         if (fixup instanceof FileFixup) {
             fileFixup = (FileFixup) fixup;
@@ -56,7 +56,7 @@ public class SingleFileFixupList {
             }
 
             try {
-                this.indexFile.seek(this.fixupCount * fixupLength);
+                this.indexFile.seek((long) this.fixupCount * fixupLength);
                 this.indexFile.writeLong(fileFixup.getPosition());
                 this.indexFile.writeLong(fileFixup.getAvailable());
                 this.fixupCount++;
@@ -68,12 +68,12 @@ public class SingleFileFixupList {
 
     public synchronized Fixup get(int index) {
         Fixup result = null;
-        long position = 0;
-        long available = 0;
+        long position;
+        long available;
 
         try {
             if (index < this.fixupCount) {
-                this.indexFile.seek(index * fixupLength);
+                this.indexFile.seek((long) index * fixupLength);
                 position = this.indexFile.readLong();
                 available = this.indexFile.readLong();
                 result = new FileFixup(this.fixedFile, position, available);

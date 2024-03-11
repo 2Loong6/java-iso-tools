@@ -28,9 +28,9 @@ import java.net.URL;
 
 public class URLDataReference implements DataReference {
 
-    private URL url = null;
-    private long position = 0;
-    private long length = 0;
+    private final URL url;
+    private final long position;
+    private final long length;
 
     public URLDataReference(URL url, long position, long length) {
         this.url = url;
@@ -43,8 +43,8 @@ public class URLDataReference implements DataReference {
     }
 
     public InputStream createInputStream() throws IOException {
-        InputStream urlInputStream = null;
-        InputStream limitedInputStream = null;
+        InputStream urlInputStream;
+        InputStream limitedInputStream;
 
         urlInputStream = this.url.openStream();
         urlInputStream.skip(this.position);

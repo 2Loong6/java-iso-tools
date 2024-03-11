@@ -26,9 +26,9 @@ import java.io.*;
 
 public class FileDataReference implements DataReference {
 
-    private File file = null;
-    private long position = 0;
-    private long length = 0;
+    private final File file;
+    private final long position;
+    private final long length;
 
     public FileDataReference(File file) {
         this.file = file;
@@ -43,7 +43,7 @@ public class FileDataReference implements DataReference {
     }
 
     public long getLength() {
-        long length = 0;
+        long length;
 
         if (this.length == -1) {
             length = this.file.length();
@@ -55,7 +55,7 @@ public class FileDataReference implements DataReference {
     }
 
     public InputStream createInputStream() throws IOException {
-        InputStream fileInputStream = null;
+        InputStream fileInputStream;
 
         fileInputStream = new FileInputStream(file);
 

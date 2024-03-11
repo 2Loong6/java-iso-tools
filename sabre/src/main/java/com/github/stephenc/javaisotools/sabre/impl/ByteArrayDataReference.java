@@ -27,9 +27,9 @@ import java.io.InputStream;
 
 public class ByteArrayDataReference implements DataReference {
 
-    private byte[] buffer = null;
-    private int start = 0;
-    private int length = 0;
+    private final byte[] buffer;
+    private final int start;
+    private final int length;
 
     public ByteArrayDataReference(byte[] buffer) {
         this.buffer = buffer;

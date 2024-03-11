@@ -23,8 +23,8 @@ import com.github.stephenc.javaisotools.sabre.*;
 
 public class ChainingStreamHandler implements StreamHandler {
 
-    private StructureHandler chainedStructureHandler = null;
-    private ContentHandler chainedContentHandler = null;
+    private final StructureHandler chainedStructureHandler;
+    private final ContentHandler chainedContentHandler;
 
     public ChainingStreamHandler(StructureHandler chainedStructureHandler, ContentHandler chainedContentHandler) {
         this.chainedStructureHandler = chainedStructureHandler;

@@ -47,7 +47,7 @@ public class DebugStreamHandler extends ChainingStreamHandler {
     }
 
     public void data(DataReference reference) throws HandlerException {
-        long length = 0;
+        long length;
 
         // Show what is happening
         length = reference.getLength();
@@ -59,8 +59,8 @@ public class DebugStreamHandler extends ChainingStreamHandler {
     }
 
     public Fixup fixup(DataReference reference) throws HandlerException {
-        Fixup fixup = null;
-        long length = 0;
+        Fixup fixup;
+        long length;
 
         // Show what is happening
         length = reference.getLength();

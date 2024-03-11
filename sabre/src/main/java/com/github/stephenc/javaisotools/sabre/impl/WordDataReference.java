@@ -27,7 +27,7 @@ import java.io.InputStream;
 
 public class WordDataReference implements DataReference {
 
-    private long value = 0;
+    private final long value;
 
     public WordDataReference(long value) {
         this.value = value;
@@ -38,10 +38,10 @@ public class WordDataReference implements DataReference {
     }
 
     public InputStream createInputStream() throws IOException {
-        byte[] buffer = null;
+        byte[] buffer;
 
         buffer = new byte[4];
-        buffer[0] = (byte) ((this.value & 0xFF000000) >> 24);
+        buffer[0] = (byte) ((this.value & 0xFF000000L) >> 24);
         buffer[1] = (byte) ((this.value & 0x00FF0000) >> 16);
         buffer[2] = (byte) ((this.value & 0x0000FF00) >> 8);
         buffer[3] = (byte) (this.value & 0x000000FF);

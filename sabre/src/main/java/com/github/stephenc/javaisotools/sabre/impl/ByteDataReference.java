@@ -27,7 +27,7 @@ import java.io.InputStream;
 
 public class ByteDataReference implements DataReference {
 
-    private long value = 0;
+    private final long value;
 
     public ByteDataReference(long value) {
         this.value = value;

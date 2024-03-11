@@ -25,8 +25,8 @@ import java.io.*;
 
 public class CopyingStreamHandler extends ChainingStreamHandler {
 
-    private Element targetType = null;
-    private DataOutputStream outputStream = null;
+    private final Element targetType;
+    private final DataOutputStream outputStream;
     private boolean isCopyingEnabled = false;
     private int elementStack = 0;
 
@@ -53,7 +53,7 @@ public class CopyingStreamHandler extends ChainingStreamHandler {
         try {
             if (this.isCopyingEnabled) {
                 this.elementStack++;
-                this.outputStream.writeInt((int) 0);
+                this.outputStream.writeInt(0);
                 this.outputStream.writeInt((int) ((Long) element.getId()).longValue());
             }
         } catch (IOException e) {
@@ -65,15 +65,15 @@ public class CopyingStreamHandler extends ChainingStreamHandler {
     }
 
     public void data(DataReference reference) throws HandlerException {
-        long lengthToWrite = 0;
-        long length = 0;
+        long lengthToWrite;
+        long length;
 
         try {
             if (isCopyingEnabled) {
-                InputStream inputStream = null;
-                byte[] buffer = null;
-                int bytesToRead = 0;
-                int bytesHandled = 0;
+                InputStream inputStream;
+                byte[] buffer;
+                int bytesToRead;
+                int bytesHandled;
                 int bufferLength = 65535;
 
                 buffer = new byte[bufferLength];
@@ -107,7 +107,7 @@ public class CopyingStreamHandler extends ChainingStreamHandler {
     }
 
     public Fixup fixup(DataReference reference) throws HandlerException {
-        Fixup fixup = null;
+        Fixup fixup;
 
         // FIXME: Think about copying fixups!
 

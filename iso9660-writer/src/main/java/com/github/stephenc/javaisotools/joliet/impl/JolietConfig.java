@@ -23,6 +23,9 @@ import com.github.stephenc.javaisotools.iso9660.ConfigException;
 import com.github.stephenc.javaisotools.iso9660.StandardConfig;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 
+/**
+ * @see <a href="https://en.wikipedia.org/wiki/ISO_9660#Joliet">Joliet</a>
+ */
 public class JolietConfig extends StandardConfig {
 
     private static final byte[][] UCS2_LEVEL_ESCAPE_SEQUENCES = {

@@ -27,7 +27,7 @@ import java.io.InputStream;
 
 public class ThreeByteDataReference implements DataReference {
 
-    private long value = 0;
+    private final long value;
 
     public ThreeByteDataReference(long value) {
         this.value = value;
@@ -39,7 +39,7 @@ public class ThreeByteDataReference implements DataReference {
     }
 
     public InputStream createInputStream() throws IOException {
-        byte[] buffer = null;
+        byte[] buffer;
 
         buffer = new byte[3];
         buffer[0] = (byte) ((this.value & 0xFF0000) >> 16);

@@ -21,11 +21,11 @@ package com.github.stephenc.javaisotools.sabre;
 
 public interface StructureHandler {
 
-    public void startDocument() throws HandlerException;
+    void startDocument() throws HandlerException;
 
-    public void startElement(Element element) throws HandlerException;
+    void startElement(Element element) throws HandlerException;
 
-    public void endElement() throws HandlerException;
+    void endElement() throws HandlerException;
 
-    public void endDocument() throws HandlerException;
+    void endDocument() throws HandlerException;
 }

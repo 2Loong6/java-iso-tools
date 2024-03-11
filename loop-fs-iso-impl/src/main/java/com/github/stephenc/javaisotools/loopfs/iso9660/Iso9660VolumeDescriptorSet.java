@@ -28,7 +28,7 @@ import java.io.IOException;
 
 public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660FileEntry> {
 
-    public static final int TYPE_BOOTRECORD = 0;
+    public static final int TYPE_BOOT_RECORD = 0;
     public static final int TYPE_PRIMARY_DESCRIPTOR = 1;
     public static final int TYPE_SUPPLEMENTARY_DESCRIPTOR = 2;
     public static final int TYPE_PARTITION_DESCRIPTOR = 3;
@@ -36,7 +36,7 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
 
     private static final Log log = LogFactory.getLog(Iso9660VolumeDescriptorSet.class);
 
-    private final Iso9660FileSystem isoFile;
+    private final Iso9660FileSystem iso9660FileSystem;
     // supplementary
     public String encoding = Constants.DEFAULT_ENCODING;
     public String escapeSequences;
@@ -71,7 +71,7 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
      * @param fileSystem the parent file system
      */
     public Iso9660VolumeDescriptorSet(Iso9660FileSystem fileSystem) {
-        this.isoFile = fileSystem;
+        this.iso9660FileSystem = fileSystem;
     }
 
     public boolean deserialize(byte[] descriptor) throws IOException {
@@ -86,7 +86,7 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
                 }
                 terminator = true;
                 break;
-            case TYPE_BOOTRECORD:
+            case TYPE_BOOT_RECORD:
                 log.debug("Found boot record");
                 break;
             case TYPE_PRIMARY_DESCRIPTOR:
@@ -94,7 +94,7 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
                 deserializePrimary(descriptor);
                 break;
             case TYPE_SUPPLEMENTARY_DESCRIPTOR:
-                log.debug("Found supplementatory descriptor");
+                log.debug("Found supplementary descriptor");
                 deserializeSupplementary(descriptor);
                 break;
             case TYPE_PARTITION_DESCRIPTOR:
@@ -111,7 +111,7 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
      * Read the fields of a primary volume descriptor.
      *
      * @param descriptor the descriptor bytes
-     * @throws IOException
+     * @throws IOException /
      */
     private void deserializePrimary(byte[] descriptor) throws IOException {
         // according to the spec, some ISO 9660 file systems can contain multiple identical primary
@@ -154,7 +154,7 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
      * descriptor information.
      *
      * @param descriptor the descriptor bytes
-     * @throws IOException
+     * @throws IOException /
      */
     private void deserializeSupplementary(byte[] descriptor) throws IOException {
         // for now, only recognize one supplementary descriptor
@@ -184,20 +184,19 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
      * Read the information common to primary and secondary volume descriptors.
      *
      * @param descriptor the volume descriptor bytes
-     * @throws IOException
      */
-    private void deserializeCommon(byte[] descriptor) throws IOException {
+    private void deserializeCommon(byte[] descriptor) {
         this.systemIdentifier = Util.getAChars(descriptor, 9, 32, this.encoding);
         this.volumeIdentifier = Util.getDChars(descriptor, 41, 32, this.encoding);
         this.volumeSetIdentifier = Util.getDChars(descriptor, 191, 128, this.encoding);
-        this.rootDirectoryEntry = new Iso9660FileEntry(this.isoFile, descriptor, 157);
+        this.rootDirectoryEntry = new Iso9660FileEntry(this.iso9660FileSystem, descriptor, 157);
     }
 
     /**
      * Check that the block size is what we expect.
      *
      * @param descriptor the descriptor bytes
-     * @throws IOException
+     * @throws IOException /
      */
     private void validateBlockSize(byte[] descriptor) throws IOException {
         int blockSize = Util.getUInt16Both(descriptor, 129);
@@ -209,8 +208,10 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
     /**
      * Derive an encoding name from the given escape sequences.
      *
-     * @param escapeSequences
-     * @return
+     * @param escapeSequences /
+     * @return /
+     * @see <a href="https://en.wikipedia.org/wiki/ISO_9660#Volume_descriptor_set">Supplementary volume descriptors</a>
+     * @see <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022#Interaction_with_other_coding_systems>escape sequences</a>
      */
     private String getEncoding(String escapeSequences) {
         return switch (escapeSequences) {
@@ -319,7 +320,7 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
     /**
      * Returns the character encoding.
      *
-     * @return
+     * @return /
      */
     public String getEncoding() {
         return this.encoding;

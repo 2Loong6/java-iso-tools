@@ -24,7 +24,7 @@ import java.io.InputStream;
 
 public interface DataReference {
 
-    public long getLength();
+    long getLength();
 
-    public InputStream createInputStream() throws IOException;
+    InputStream createInputStream() throws IOException;
 }
