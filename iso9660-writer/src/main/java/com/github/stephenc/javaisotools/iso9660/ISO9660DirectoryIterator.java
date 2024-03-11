@@ -30,11 +30,11 @@ import java.util.List;
  */
 public class ISO9660DirectoryIterator implements Iterator<ISO9660Directory> {
 
-    private List<ISO9660Directory> dirCollection;
+    private final List<ISO9660Directory> dirCollection;
     private Iterator<ISO9660Directory> dirCollectionIterator;
 
     public ISO9660DirectoryIterator(ISO9660Directory start, boolean sort) {
-        this.dirCollection = new ArrayList<ISO9660Directory>();
+        this.dirCollection = new ArrayList<>();
         if (sort) {
             setupSorted(start);
         } else {
@@ -51,9 +51,8 @@ public class ISO9660DirectoryIterator implements Iterator<ISO9660Directory> {
         // Sort according to ISO 9660 needs
         List<ISO9660Directory> dirs = start.getDirectories();
         if (!dirs.isEmpty()) {
-            LinkedList<ISO9660Directory> queue = new LinkedList<ISO9660Directory>();
             dirCollection.addAll(dirs);
-            queue.addAll(dirs);
+            LinkedList<ISO9660Directory> queue = new LinkedList<>(dirs);
             while (!queue.isEmpty()) {
                 ISO9660Directory dir = queue.removeFirst();
                 if (dir == dir.getRoot().getMovedDirectoriesStore()) {

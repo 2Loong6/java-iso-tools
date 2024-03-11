@@ -19,18 +19,14 @@
 
 package com.github.stephenc.javaisotools.iso9660;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import com.github.stephenc.javaisotools.sabre.HandlerException;
+
+import java.io.File;
+import java.util.*;
 
 public class ISO9660Directory implements ISO9660HierarchyObject {
 
+    ISO9660DirectoryIterator sortedIterator, unsortedIterator;
     private String name;
     private int level;
     private List<ISO9660File> files;
@@ -40,7 +36,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
     private long lastModified;
     private boolean sorted;
     private Object id;
-    ISO9660DirectoryIterator sortedIterator, unsortedIterator;
 
     /**
      * Create directory
@@ -56,7 +51,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      * Create directory
      *
      * @param file Directory
-     *
      * @throws HandlerException Not a directory
      */
     public ISO9660Directory(File file) throws HandlerException {
@@ -80,6 +74,10 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
         this.id = new Object();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
 
@@ -87,14 +85,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
             // Force sort of parent only if is contains this directory
             parent.forceSort();
         }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    private void setLevel(int level) {
-        this.level = level;
     }
 
     /**
@@ -106,12 +96,16 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
         return this.level;
     }
 
-    void setRoot(ISO9660RootDirectory root) {
-        this.root = root;
+    private void setLevel(int level) {
+        this.level = level;
     }
 
     public ISO9660RootDirectory getRoot() {
         return root;
+    }
+
+    void setRoot(ISO9660RootDirectory root) {
+        this.root = root;
     }
 
     public ISO9660Directory getParentDirectory() {
@@ -152,7 +146,7 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      * @return Whether the directory contains subdirectories
      */
     public boolean hasSubDirs() {
-        return (directories.size() > 0);
+        return !directories.isEmpty();
     }
 
     public String getISOPath() {
@@ -207,7 +201,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      * Add directory
      *
      * @param dir Directory to be added
-     *
      * @return Added directory
      */
     public ISO9660Directory addDirectory(ISO9660Directory dir) {
@@ -222,27 +215,23 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
 
     /**
      * Update subdirectories info (level, root) based on <tt>dir</tt> info.
-     * 
+     *
      * @param dir Directory whose subdirectories will be updated
      */
     private void updateSubdirectories(ISO9660Directory dir) {
-    	List<ISO9660Directory> subdirectories = dir.getDirectories();
-    	Iterator<ISO9660Directory> iter = subdirectories.iterator();
-    	while (iter.hasNext()) {
-    		ISO9660Directory subdir = (ISO9660Directory) iter.next();
-    		subdir.setLevel(dir.getLevel() + 1);
-    		subdir.setRoot(dir.getRoot());
-    		updateSubdirectories(subdir);
-    	}
+        List<ISO9660Directory> subdirectories = dir.getDirectories();
+        for (ISO9660Directory subdir : subdirectories) {
+            subdir.setLevel(dir.getLevel() + 1);
+            subdir.setRoot(dir.getRoot());
+            updateSubdirectories(subdir);
+        }
     }
 
     /**
      * Add directory
      *
      * @param file Directory to be added
-     *
      * @return Added directory
-     *
      * @throws com.github.stephenc.javaisotools.sabre.HandlerException Not a directory
      */
     public ISO9660Directory addDirectory(File file) throws HandlerException {
@@ -254,7 +243,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      * Add directory
      *
      * @param name Name of the directory to created and added
-     *
      * @return Added directory
      */
     public ISO9660Directory addDirectory(String name) {
@@ -266,13 +254,12 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      * Add path
      *
      * @param path Filesystem-specific path to be added recursively
-     *
      * @return Topmost added directory
      * @throws com.github.stephenc.javaisotools.sabre.HandlerException
      */
     public ISO9660Directory addPath(String path) throws HandlerException {
         ISO9660Directory dir;
-        if (path.indexOf(File.separator) == -1) {
+        if (!path.contains(File.separator)) {
             // Path is a directory - add it if not already listed
             return checkDirectory(path);
         }
@@ -326,7 +313,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      *
      * @param file    File to be added
      * @param version File version
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void addFile(File file, int version) throws HandlerException {
@@ -337,7 +323,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      * Add file
      *
      * @param file File to be added
-     *
      * @throws com.github.stephenc.javaisotools.sabre.HandlerException Problems converting to ISO9660File
      */
     public void addFile(File file) throws HandlerException {
@@ -349,7 +334,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      *
      * @param pathname File to be added
      * @param version  File version
-     *
      * @throws com.github.stephenc.javaisotools.sabre.HandlerException Problems converting to ISO9660File
      */
     public void addFile(String pathname, int version) throws HandlerException {
@@ -360,7 +344,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      * Add file
      *
      * @param pathname File to be added
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void addFile(String pathname) throws HandlerException {
@@ -371,7 +354,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      * Add file or directory recursively
      *
      * @param file File or directory to be added recursively
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void addRecursively(File file) throws HandlerException {
@@ -382,7 +364,6 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
      * Add contents of directory recursively
      *
      * @param file Directory the contents of which are to be added recursively
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void addContentsRecursively(File file) throws HandlerException {
@@ -403,22 +384,20 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
         }
 
         // Add directory contents recursively
-        for (File childFile : file.listFiles()) {
+        for (File childFile : Objects.requireNonNull(file.listFiles())) {
             addRecursively(childFile, true, dir);
         }
     }
 
-    public int compareTo(Object object) throws ClassCastException, NullPointerException {
+    public int compareTo(ISO9660HierarchyObject iso9660HierarchyObject) throws ClassCastException, NullPointerException {
         // Alphanumerical case-insensitive sort (according to ISO9660 needs)
-        if (object == null) {
+        if (iso9660HierarchyObject == null) {
             throw new NullPointerException();
-        } else if (object.equals(this)) {
+        } else if (iso9660HierarchyObject.equals(this)) {
             return 0;
-        } else if (object instanceof ISO9660Directory) {
-            ISO9660Directory dir = (ISO9660Directory) object;
+        } else if (iso9660HierarchyObject instanceof ISO9660Directory dir) {
             return getName().toUpperCase().compareTo(dir.getName().toUpperCase());
-        } else if (object instanceof ISO9660File) {
-            ISO9660File file = (ISO9660File) object;
+        } else if (iso9660HierarchyObject instanceof ISO9660File file) {
             return getName().toUpperCase().compareTo(file.getFullName().toUpperCase());
         } else {
             throw new ClassCastException();
@@ -462,9 +441,9 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
 
         // Update level of all subdirectories
         int difference = oldLevel - getLevel();
-        Iterator it = unsortedIterator();
+        Iterator<ISO9660Directory> it = unsortedIterator();
         while (it.hasNext()) {
-            ISO9660Directory subdir = (ISO9660Directory) it.next();
+            ISO9660Directory subdir = it.next();
             subdir.setLevel(subdir.getLevel() - difference);
         }
 
@@ -485,8 +464,8 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
         }
 
         clone.level = level;
-        clone.directories = new ArrayList<ISO9660Directory>();
-        clone.files = new ArrayList<ISO9660File>();
+        clone.directories = new ArrayList<>();
+        clone.files = new ArrayList<>();
         clone.id = id;
         clone.sortedIterator = null;
         clone.sorted = false;
@@ -535,5 +514,5 @@ public class ISO9660Directory implements ISO9660HierarchyObject {
         }
         unsortedIterator.reset();
         return unsortedIterator;
-	}
+    }
 }

@@ -19,10 +19,10 @@
 
 package com.github.stephenc.javaisotools.udflib.structures;
 
+import com.github.stephenc.javaisotools.udflib.tools.Checksum;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import com.github.stephenc.javaisotools.udflib.tools.Checksum;
 
 public class AnchorVolumeDescriptorPointer {
 

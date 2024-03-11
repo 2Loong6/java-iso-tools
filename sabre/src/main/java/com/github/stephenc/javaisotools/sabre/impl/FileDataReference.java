@@ -19,14 +19,10 @@
 
 package com.github.stephenc.javaisotools.sabre.impl;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.io.LimitingInputStream;
+
+import java.io.*;
 
 public class FileDataReference implements DataReference {
 

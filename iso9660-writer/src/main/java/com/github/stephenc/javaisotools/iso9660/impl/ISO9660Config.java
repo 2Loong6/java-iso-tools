@@ -19,10 +19,10 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.lang.Character.UnicodeBlock;
-
 import com.github.stephenc.javaisotools.iso9660.ConfigException;
 import com.github.stephenc.javaisotools.iso9660.StandardConfig;
+
+import java.lang.Character.UnicodeBlock;
 
 public class ISO9660Config extends StandardConfig {
 
@@ -39,7 +39,6 @@ public class ISO9660Config extends StandardConfig {
      * characters<br> 3: multiple File Sections (files &gt; 2 GB)
      *
      * @param level 1, 2 or 3
-     *
      * @throws com.github.stephenc.javaisotools.iso9660.ConfigException Invalid or unsupported Interchange Level
      */
     public void setInterchangeLevel(int level) throws ConfigException {
@@ -132,12 +131,12 @@ public class ISO9660Config extends StandardConfig {
         super.setVolumeSetID(checkDString(volumeSetID));
     }
 
-    public void setPadEnd(boolean padEnd) {
-        this.padEnd = padEnd;
-    }
-
     public boolean getPadEnd() {
         return this.padEnd;
+    }
+
+    public void setPadEnd(boolean padEnd) {
+        this.padEnd = padEnd;
     }
 
     private String checkAString(String string) {
@@ -155,17 +154,17 @@ public class ISO9660Config extends StandardConfig {
     }
 
     private String checkASCIIString(String string) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < string.length(); i++) {
             UnicodeBlock characterBlock = UnicodeBlock.of(string.charAt(i));
             if (characterBlock == UnicodeBlock.BASIC_LATIN) {
-                buf.append(string.charAt(i));
+                builder.append(string.charAt(i));
             } else {
-                buf.append('_');
+                builder.append('_');
             }
         }
 
-        return buf.toString();
+        return builder.toString();
     }
 }

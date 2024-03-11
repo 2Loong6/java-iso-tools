@@ -19,14 +19,15 @@
 
 package com.github.stephenc.javaisotools.udflib.structures;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
 import com.github.stephenc.javaisotools.udflib.tools.Checksum;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 public class FileEntry {
 
+    public static int fixedPartLength = 176;
     public Tag DescriptorTag;                    // struct tag
     public IcbTag ICBTag;                            // struct icbtag
     public long Uid;                            // Uint32
@@ -49,8 +50,6 @@ public class FileEntry {
     public long LengthofAllocationDescriptors;    // Uint32
     public byte ExtendedAttributes[];            // byte[]
     public byte AllocationDescriptors[];        // byte[]
-
-    public static int fixedPartLength = 176;
 
     public FileEntry() {
         DescriptorTag = new Tag();

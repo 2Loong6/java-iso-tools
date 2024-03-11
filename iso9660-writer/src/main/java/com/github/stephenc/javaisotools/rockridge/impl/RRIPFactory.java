@@ -19,19 +19,18 @@
 
 package com.github.stephenc.javaisotools.rockridge.impl;
 
+import com.github.stephenc.javaisotools.iso9660.impl.ISO9660DateDataReference;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660ShortDateDataReference;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
+import com.github.stephenc.javaisotools.sabre.DataReference;
+import com.github.stephenc.javaisotools.sabre.Fixup;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
-import com.github.stephenc.javaisotools.iso9660.impl.ISO9660DateDataReference;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.Fixup;
 
 public class RRIPFactory extends SUSPFactory {
 
-    public static boolean MKISOFS_COMPATIBILITY = true;
     public static final int CR_CONTINUES = 1;
     public static final int CR_CURRENT = 2;
     public static final int CR_PARENT = 4;
@@ -56,6 +55,7 @@ public class RRIPFactory extends SUSPFactory {
     public static final int RR_RE_RECORDED = 64;
     public static final int RR_TF_RECORDED = 128;
     public static final int NM_ENTRY_LENGTH = 5;
+    public static boolean MKISOFS_COMPATIBILITY = true;
 
     public RRIPFactory(StreamHandler streamHandler) {
         super(streamHandler);

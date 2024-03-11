@@ -19,21 +19,18 @@
 
 package com.github.stephenc.javaisotools.rockridge.impl;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
-import com.github.stephenc.javaisotools.iso9660.ISO9660File;
-import com.github.stephenc.javaisotools.iso9660.ISO9660RootDirectory;
+import com.github.stephenc.javaisotools.iso9660.*;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
-import com.github.stephenc.javaisotools.iso9660.FilenameDataReference;
-import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
-import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class RockRidgeLayoutHelper extends LayoutHelper {
 
-    private ISO9660RootDirectory rripRoot;
-    private HashMap directoryMapper, fileMapper;
+    private final ISO9660RootDirectory rripRoot;
+    private Map directoryMapper, fileMapper;
 
     public RockRidgeLayoutHelper(StreamHandler streamHandler, ISO9660RootDirectory isoRoot,
                                  ISO9660RootDirectory rripRoot) {
@@ -46,9 +43,9 @@ public class RockRidgeLayoutHelper extends LayoutHelper {
         // Lookup tables mapping files and directories between hierarchies
         // (ISO 9660 -> Rock Ridge)
         int dirCount = isoRoot.deepDirCount() + 1;
-        directoryMapper = new HashMap(dirCount);
+        directoryMapper = new HashMap<>(dirCount);
         int fileCount = isoRoot.deepFileCount() + 1;
-        fileMapper = new HashMap(fileCount);
+        fileMapper = new HashMap<>(fileCount);
 
         // Root files (root itself does not have to be mapped)
         Iterator isoFit = isoRoot.getFiles().iterator();

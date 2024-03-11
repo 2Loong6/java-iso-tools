@@ -18,25 +18,25 @@
 
 package com.github.stephenc.javaisotools.loopfs.iso9660;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeTrue;
-
 import com.github.stephenc.javaisotools.loopfs.spi.SeekableInputFile;
 import com.github.stephenc.javaisotools.loopfs.spi.SeekableInputFileHadoop;
 import com.google.common.collect.Iterables;
+import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
-import org.codehaus.plexus.util.IOUtil;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Tests the Iso9660 implementation.
@@ -49,16 +49,12 @@ public class Iso9660FileSystemTest {
     private static Properties testProperties;
     private static String filePath;
 
-    @BeforeClass
+    @BeforeAll
     public static void loadConfiguration() throws Exception {
         testProperties = new Properties();
-        InputStream is = null;
-        try {
-            is = Iso9660FileSystemTest.class.getResourceAsStream("/test.properties");
+        try (InputStream is = Iso9660FileSystemTest.class.getResourceAsStream("/test.properties")) {
             testProperties.load(is);
             filePath = testProperties.getProperty("source-image");
-        } finally {
-            IOUtil.close(is);
         }
     }
 
@@ -77,7 +73,7 @@ public class Iso9660FileSystemTest {
 
         byte[] bytes = fs.getBytes(entry);
 
-        assertThat("All bytes should have been read", new String(bytes), is("Goodbye"));
+        assertEquals("Goodbye", new String(bytes), "All bytes should have been read");
     }
 
     @Test
@@ -85,25 +81,25 @@ public class Iso9660FileSystemTest {
         assumeTrue(isNotWindows());
         //Creating a Mini DFS Cluster as the default File System does not return a Seekable Stream
         MiniDFSCluster.Builder builder = new MiniDFSCluster.Builder(new Configuration());
-        MiniDFSCluster hdfsCluster = builder.build();
-        String hdfsTestFile = "hdfs://127.0.0.1:" + hdfsCluster.getNameNodePort() + "/test/" + filePath;
-        hdfsCluster.getFileSystem()
-                .copyFromLocalFile(new Path(filePath), new Path(hdfsTestFile));
-        InputStream is = hdfsCluster.getFileSystem().open(new Path(hdfsTestFile));
-        Iso9660FileSystem image = new Iso9660FileSystem(new SeekableInputFileHadoop(is), true);
-        this.runCheck(image);
-        hdfsCluster.shutdown();
+        try (MiniDFSCluster hdfsCluster = builder.build()) {
+            String hdfsTestFile = "hdfs://127.0.0.1:" + hdfsCluster.getNameNodePort() + "/test/" + filePath;
+            hdfsCluster.getFileSystem()
+                    .copyFromLocalFile(new Path(filePath), new Path(hdfsTestFile));
+            InputStream is = hdfsCluster.getFileSystem().open(new Path(hdfsTestFile));
+            Iso9660FileSystem image = new Iso9660FileSystem(new SeekableInputFileHadoop(is), true);
+            this.runCheck(image);
+            hdfsCluster.shutdown();
+        }
     }
 
     private void runCheck(Iso9660FileSystem image) throws Exception {
         File source = new File(testProperties.getProperty("source-root"));
         for (Iso9660FileEntry entry : image) {
             File sourceFile = new File(source, entry.getPath());
-            assertThat(sourceFile.isDirectory(), is(entry.isDirectory()));
+            assertEquals(entry.isDirectory(), sourceFile.isDirectory());
             if (!sourceFile.isDirectory()) {
-                assertThat(sourceFile.length(), is(entry.getSize()));
-                assertThat("contents are equal",
-                        IOUtil.contentEquals(image.getInputStream(entry), new FileInputStream(sourceFile)), is(true));
+                assertEquals(entry.getSize(), sourceFile.length());
+                assertTrue(IOUtils.contentEquals(image.getInputStream(entry), new FileInputStream(sourceFile)), "contents are equal");
             }
         }
     }

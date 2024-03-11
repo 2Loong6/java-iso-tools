@@ -19,18 +19,13 @@
 
 package com.github.stephenc.javaisotools.udflib;
 
+import com.github.stephenc.javaisotools.sabre.HandlerException;
+import com.github.stephenc.javaisotools.sabre.StreamHandler;
+import com.github.stephenc.javaisotools.udflib.handler.*;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.Iterator;
-
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.StreamHandler;
-import com.github.stephenc.javaisotools.udflib.handler.DescriptorTagHandler;
-import com.github.stephenc.javaisotools.udflib.handler.PaddingHandler;
-import com.github.stephenc.javaisotools.udflib.handler.SerializationHandler;
-import com.github.stephenc.javaisotools.udflib.handler.UDF102Handler;
-import com.github.stephenc.javaisotools.udflib.handler.UDF201Handler;
-import com.github.stephenc.javaisotools.udflib.handler.UDF260Handler;
 
 public class SabreUDFImageBuilder {
 
@@ -97,8 +92,7 @@ public class SabreUDFImageBuilder {
         UDFLayoutInformation myUDFLayoutInformation = null;
         try {
             myUDFLayoutInformation = new UDFLayoutInformation(rootUDFImageBuilderFile, myUDFRevision, blockSize);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new HandlerException(ex);
         }
 
@@ -128,8 +122,8 @@ public class SabreUDFImageBuilder {
         mySabreUDFElementFactory.endAVDP();
 
         /*
-           * 		WRITE MAIN VOLUME DESCRIPTOR SEQUENCE
-           */
+         * 		WRITE MAIN VOLUME DESCRIPTOR SEQUENCE
+         */
 
         // write primary volume descriptor
         mySabreUDFElementFactory.startPVD();
@@ -181,8 +175,8 @@ public class SabreUDFImageBuilder {
         mySabreUDFElementFactory.endEmptyArea();
 
         /*
-           * 		WRITE LOGICAL VOLUME INTEGRITY DESCRIPTOR SEQUENCE
-           */
+         * 		WRITE LOGICAL VOLUME INTEGRITY DESCRIPTOR SEQUENCE
+         */
         // write logical volume integrity descriptor
         mySabreUDFElementFactory.startLVID();
         mySabreUDFElementFactory.doLVID(myUDFLayoutInformation.LVIDSStartingBlock + 0, recordingTimeMillis,
@@ -204,8 +198,8 @@ public class SabreUDFImageBuilder {
         mySabreUDFElementFactory.endEmptyArea();
 
         /*
-           * 		WRITE METADATA
-           */
+         * 		WRITE METADATA
+         */
 
         // one empty block at the start of the partition
         mySabreUDFElementFactory.startEmptyArea();
@@ -242,8 +236,8 @@ public class SabreUDFImageBuilder {
         mySabreUDFElementFactory.endEmptyArea();
 
         /*
-           * 		WRITE FILEDATA
-           */
+         * 		WRITE FILEDATA
+         */
 
         // write raw file data
         myIterator = myUDFLayoutInformation.linearUDFImageBuilderFileOrdering.iterator();
@@ -268,8 +262,8 @@ public class SabreUDFImageBuilder {
         mySabreUDFElementFactory.endMetadataFile();
 
         /*
-           * 		WRITE RESERVE VOLUME DESCRIPTOR SEQUENCE
-           */
+         * 		WRITE RESERVE VOLUME DESCRIPTOR SEQUENCE
+         */
 
         // write primary volume descriptor
         mySabreUDFElementFactory.startPVD();

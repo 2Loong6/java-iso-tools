@@ -24,9 +24,9 @@ import com.github.stephenc.javaisotools.sabre.Element;
 public class ISO9660Element extends Element {
 
     /* Examples:
-      * VDS, PTA, DRA, FCA
-      */
-    private String id;
+     * VDS, PTA, DRA, FCA
+     */
+    private final String id;
 
     public ISO9660Element(String id) {
         this.id = id;

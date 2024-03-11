@@ -19,30 +19,26 @@
 
 package com.github.stephenc.javaisotools.joliet.impl;
 
-import java.util.Vector;
-
 import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
 import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.NamingConventions;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 
-public class JolietNamingConventions extends NamingConventions {
-    private final int jolietMaxChars;
+import java.util.Vector;
 
+public class JolietNamingConventions extends NamingConventions {
+    public static boolean FORCE_DOT_DELIMITER = true;
+    private final int jolietMaxChars;
     /**
      * Whether to fail if a file name will be truncated
      */
-	private boolean failOnTruncation;
-    
-	public static boolean FORCE_DOT_DELIMITER = true;
+    private final boolean failOnTruncation;
 
-	/**
-	 * @param maxChars
-	 *            Maximum number of characters permitted in the filename: (64
-	 *            for the specification; 103 from mkisofs; 110 from Microsoft.)
-	 * 
-	 * @see <a href="http://msdn.microsoft.com/en-us/library/ff469400.aspx">link</a>
-	 */
+    /**
+     * @param maxChars Maximum number of characters permitted in the filename: (64
+     *                 for the specification; 103 from mkisofs; 110 from Microsoft.)
+     * @see <a href="http://msdn.microsoft.com/en-us/library/ff469400.aspx">link</a>
+     */
     public JolietNamingConventions(int maxChars, boolean failOnTruncation) {
         super("Joliet");
         jolietMaxChars = maxChars;
@@ -61,7 +57,7 @@ public class JolietNamingConventions extends NamingConventions {
             filename = filename.substring(0, 64);
         }
 
-        if (filename.length() == 0) {
+        if (filename.isEmpty()) {
             throw new HandlerException(getID() + ": Empty directory name encountered.");
         }
 
@@ -77,7 +73,7 @@ public class JolietNamingConventions extends NamingConventions {
         String extension = normalize(file.getExtension());
         file.enforceDotDelimiter(FORCE_DOT_DELIMITER);
 
-        if (filename.length() == 0 && extension.length() == 0) {
+        if (filename.isEmpty() && extension.isEmpty()) {
             throw new HandlerException(getID() + ": Empty file name encountered.");
         }
 
@@ -97,10 +93,10 @@ public class JolietNamingConventions extends NamingConventions {
 
         // If the complete file name is too long (name + extension + version + . and ;)
         int fullLength = filename.length() + extension.length() + (file.getVersion() + "").length() + 2;
-		if (fullLength > jolietMaxChars) {
-			if (failOnTruncation) {
-				throw new HandlerException("File " + file.getFullName() + " is longer than the maximum Joliet name of " + jolietMaxChars + " characters");
-			}
+        if (fullLength > jolietMaxChars) {
+            if (failOnTruncation) {
+                throw new HandlerException("File " + file.getFullName() + " is longer than the maximum Joliet name of " + jolietMaxChars + " characters");
+            }
             if (filename.length() >= extension.length()) {
                 // Shorten filename
                 filename = filename.substring(0, filename.length() - (fullLength - jolietMaxChars));
@@ -118,7 +114,7 @@ public class JolietNamingConventions extends NamingConventions {
         return name.replaceAll("[*/:;?\\\\]", "_");
     }
 
-    public void addDuplicate(Vector duplicates, String name, int version) {
+    public void addDuplicate(Vector<String[]> duplicates, String name, int version) {
         String[] data = {name.toUpperCase(), version + ""};
         duplicates.add(data);
     }

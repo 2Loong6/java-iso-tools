@@ -19,6 +19,8 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
+import com.github.stephenc.javaisotools.sabre.DataReference;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,11 +28,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import com.github.stephenc.javaisotools.sabre.DataReference;
-
 public class ISO9660DateDataReference implements DataReference {
 
-    private Date date = null;
+    private final Date date;
 
     public ISO9660DateDataReference(Date date) {
         this.date = date;
@@ -71,7 +71,7 @@ public class ISO9660DateDataReference implements DataReference {
     }
 
     private byte[] getDate() {
-        byte[] buffer = new byte[17];
+        byte[] buffer;
 
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(date);
@@ -87,7 +87,7 @@ public class ISO9660DateDataReference implements DataReference {
         int gmt_offset = cal.get(Calendar.ZONE_OFFSET) / (15 * 60 * 1000);
 
         // Create ISO9660 date
-        StringBuffer dateString = new StringBuffer(17);
+        StringBuilder dateString = new StringBuilder(17);
         dateString.append(padIntToString(year, 4));
         dateString.append(padIntToString(month, 2));
         dateString.append(padIntToString(day, 2));
@@ -105,10 +105,10 @@ public class ISO9660DateDataReference implements DataReference {
 
     private String padIntToString(int value, int length) {
         String intValue = "" + value;
-        StringBuffer buf = new StringBuffer(intValue);
-        while (buf.length() < length) {
-            buf.insert(0, "0");
+        StringBuilder builder = new StringBuilder(intValue);
+        while (builder.length() < length) {
+            builder.insert(0, "0");
         }
-        return buf.toString();
+        return builder.toString();
     }
 }

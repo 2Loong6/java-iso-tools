@@ -25,11 +25,11 @@ public class ISOFileSet extends FileSet {
 
     private String prefix = "";
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
     public String getPrefix() {
         return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 }

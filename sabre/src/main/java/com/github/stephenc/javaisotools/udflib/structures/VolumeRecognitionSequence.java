@@ -24,12 +24,6 @@ import java.io.RandomAccessFile;
 
 public class VolumeRecognitionSequence {
 
-    public enum NSRVersion {
-
-        NSR02,
-        NSR03
-    }
-
     private NSRVersion nsrVersion;
 
     public VolumeRecognitionSequence(NSRVersion nsrVersion) {
@@ -108,6 +102,12 @@ public class VolumeRecognitionSequence {
         pos += terminatingExtendedAreaDescriptorBytes.length;
 
         return rawBytes;
+    }
+
+    public enum NSRVersion {
+
+        NSR02,
+        NSR03
     }
 
 }

@@ -24,11 +24,11 @@ import com.github.stephenc.javaisotools.sabre.Element;
 public class LogicalSectorElement extends Element {
 
     /* Examples:
-      * BR, PVD, SVD, VPD, VDST,
-      * PT, DR, CA,
-      * CATALOG, IMAGE
-      */
-    private String id;
+     * BR, PVD, SVD, VPD, VDST,
+     * PT, DR, CA,
+     * CATALOG, IMAGE
+     */
+    private final String id;
 
     public LogicalSectorElement(String id) {
         this.id = id;

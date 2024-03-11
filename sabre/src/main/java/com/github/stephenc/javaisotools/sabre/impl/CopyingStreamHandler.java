@@ -19,20 +19,9 @@
 
 package com.github.stephenc.javaisotools.sabre.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.github.stephenc.javaisotools.sabre.*;
 
-import com.github.stephenc.javaisotools.sabre.ContentHandler;
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.Fixup;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.StructureHandler;
+import java.io.*;
 
 public class CopyingStreamHandler extends ChainingStreamHandler {
 

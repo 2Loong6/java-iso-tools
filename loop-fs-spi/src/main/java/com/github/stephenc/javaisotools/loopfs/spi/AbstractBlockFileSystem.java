@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2010. Stephen Connolly.
  * Copyright (c) 2006-2007. loopy project (http://loopy.sourceforge.net).
- *  
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -19,10 +19,10 @@
 
 package com.github.stephenc.javaisotools.loopfs.spi;
 
+import com.github.stephenc.javaisotools.loopfs.api.FileEntry;
+
 import java.io.IOException;
 import java.util.Iterator;
-
-import com.github.stephenc.javaisotools.loopfs.api.FileEntry;
 
 /**
  * A block file system is segmented into multiple fixed-size blocks. It consists of a set of volume descriptors followed
@@ -82,7 +82,6 @@ public abstract class AbstractBlockFileSystem<T extends FileEntry> extends Abstr
      * Read the data for the specified block into the specified buffer.
      *
      * @return if the block was actually read
-     *
      * @throws IOException if the number of bytes read into the buffer was less than the expected number (i.e. the block
      *                     size)
      */
@@ -106,7 +105,7 @@ public abstract class AbstractBlockFileSystem<T extends FileEntry> extends Abstr
      * @return the number of bytes read into the buffer
      */
     protected final synchronized int readData(final long startPos, final byte[] buffer, final int offset,
-                                        final int len)
+                                              final int len)
             throws IOException {
         seek(startPos);
         return read(buffer, offset, len);

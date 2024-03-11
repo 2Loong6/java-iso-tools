@@ -19,14 +19,15 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
+import com.github.stephenc.javaisotools.iso9660.FilenameDataReference;
+import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
+import com.github.stephenc.javaisotools.iso9660.ISO9660File;
+import com.github.stephenc.javaisotools.sabre.HandlerException;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.github.stephenc.javaisotools.iso9660.FilenameDataReference;
-import com.github.stephenc.javaisotools.iso9660.ISO9660File;
-import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
+import java.nio.charset.StandardCharsets;
 
 public class ISO9660FilenameDataReference extends FilenameDataReference {
 
@@ -43,6 +44,6 @@ public class ISO9660FilenameDataReference extends FilenameDataReference {
     }
 
     public InputStream createInputStream() throws IOException {
-        return new ByteArrayInputStream(getName().getBytes("ISO-8859-1"));
+        return new ByteArrayInputStream(getName().getBytes(StandardCharsets.ISO_8859_1));
     }
 }

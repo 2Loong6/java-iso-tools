@@ -19,21 +19,10 @@
 
 package com.github.stephenc.javaisotools.udflib.handler;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.StreamHandler;
+import com.github.stephenc.javaisotools.sabre.*;
 import com.github.stephenc.javaisotools.sabre.impl.FileFixup;
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.Fixup;
+
+import java.io.*;
 
 public class SerializationHandler implements StreamHandler {
 
@@ -53,8 +42,7 @@ public class SerializationHandler implements StreamHandler {
 
         try {
             myDataOutputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(myOutputFile)));
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
         }
     }
@@ -63,8 +51,7 @@ public class SerializationHandler implements StreamHandler {
             throws HandlerException {
         try {
             myDataOutputStream.close();
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
         }
     }
@@ -113,18 +100,15 @@ public class SerializationHandler implements StreamHandler {
 
             myDataOutputStream.flush();
 
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             try {
                 if (myInputStream != null) {
                     myInputStream.close();
                     myInputStream = null;
                 }
-            }
-            catch (IOException myIOException) {
+            } catch (IOException myIOException) {
             }
         }
     }

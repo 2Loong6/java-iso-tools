@@ -33,15 +33,6 @@ public abstract class BootConfig {
     }
 
     /**
-     * Boot System Identifier
-     *
-     * @param bootSystemId Identifier for the system that can act upon the Boot System Use field
-     */
-    public void setBootSystemId(String bootSystemId) {
-        this.bootSystemId = bootSystemId;
-    }
-
-    /**
      * Active Boot System Identifier
      *
      * @return Active Boot System identifier
@@ -51,12 +42,12 @@ public abstract class BootConfig {
     }
 
     /**
-     * Boot Identifier
+     * Boot System Identifier
      *
-     * @param bootId Boot identifier
+     * @param bootSystemId Identifier for the system that can act upon the Boot System Use field
      */
-    public void setBootId(String bootId) {
-        this.bootId = bootId;
+    public void setBootSystemId(String bootSystemId) {
+        this.bootSystemId = bootSystemId;
     }
 
     /**
@@ -66,5 +57,14 @@ public abstract class BootConfig {
      */
     public String getBootId() {
         return bootId;
+    }
+
+    /**
+     * Boot Identifier
+     *
+     * @param bootId Boot identifier
+     */
+    public void setBootId(String bootId) {
+        this.bootId = bootId;
     }
 }

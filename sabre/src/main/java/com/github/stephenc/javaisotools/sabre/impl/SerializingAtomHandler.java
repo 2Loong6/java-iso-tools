@@ -19,17 +19,9 @@
 
 package com.github.stephenc.javaisotools.sabre.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
+import com.github.stephenc.javaisotools.sabre.*;
 
-import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.Fixup;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.StreamHandler;
+import java.io.*;
 
 public class SerializingAtomHandler implements StreamHandler {
 

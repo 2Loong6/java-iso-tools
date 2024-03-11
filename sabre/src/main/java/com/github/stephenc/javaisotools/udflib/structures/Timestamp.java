@@ -19,11 +19,11 @@
 
 package com.github.stephenc.javaisotools.udflib.structures;
 
+import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Calendar;
-
-import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
 
 public class Timestamp {
 

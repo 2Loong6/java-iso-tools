@@ -45,7 +45,7 @@ class EntryInputStream extends InputStream {
         this.rem = entry.getSize();
     }
 
-    public int read(final byte b[], final int off, final int len) throws IOException {
+    public int read(final byte[] b, final int off, final int len) throws IOException {
         ensureOpen();
 
         if (this.rem <= 0) {
@@ -59,7 +59,7 @@ class EntryInputStream extends InputStream {
 
         if (toRead > this.rem) {
             // down cast is safe as toRead is int and greater than this.rem
-            toRead = (int)this.rem;
+            toRead = (int) this.rem;
         }
 
         int read;
@@ -95,7 +95,7 @@ class EntryInputStream extends InputStream {
     public long skip(final long n) {
         ensureOpen();
 
-        final long len = (n > this.rem) ? this.rem : n;
+        final long len = Math.min(n, this.rem);
 
         this.pos += len;
         this.rem -= len;

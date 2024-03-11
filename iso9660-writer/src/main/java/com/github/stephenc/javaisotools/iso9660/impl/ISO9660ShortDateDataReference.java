@@ -19,14 +19,14 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
+import com.github.stephenc.javaisotools.sabre.DataReference;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import com.github.stephenc.javaisotools.sabre.DataReference;
 
 public class ISO9660ShortDateDataReference implements DataReference {
 
@@ -60,8 +60,7 @@ public class ISO9660ShortDateDataReference implements DataReference {
     }
 
     private byte[] getEmptyDate() {
-        byte[] buffer = {0, 0, 0, 0, 0, 0, 0};
-        return buffer;
+        return new byte[]{0, 0, 0, 0, 0, 0, 0};
     }
 
     private byte[] getDate() {

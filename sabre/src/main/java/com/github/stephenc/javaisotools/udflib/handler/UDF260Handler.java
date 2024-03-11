@@ -19,21 +19,21 @@
 
 package com.github.stephenc.javaisotools.udflib.handler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Calendar;
-
 import com.github.stephenc.javaisotools.sabre.ContentHandler;
 import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
+import com.github.stephenc.javaisotools.sabre.StructureHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
 import com.github.stephenc.javaisotools.udflib.SabreUDFElement;
+import com.github.stephenc.javaisotools.udflib.structures.ExtendedFileEntry;
 import com.github.stephenc.javaisotools.udflib.structures.Short_ad;
 import com.github.stephenc.javaisotools.udflib.structures.Timestamp;
 import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
-import com.github.stephenc.javaisotools.udflib.structures.ExtendedFileEntry;
-import com.github.stephenc.javaisotools.sabre.StructureHandler;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Calendar;
 
 public class UDF260Handler extends UDF201Handler {
 
@@ -103,16 +103,13 @@ public class UDF260Handler extends UDF201Handler {
             recordingTimeCalendar.setTimeInMillis(BinaryTools.readUInt64AsLong(myInputStream));
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -131,8 +128,7 @@ public class UDF260Handler extends UDF201Handler {
 
         try {
             metadataExtendedFileEntry.ImplementationIdentifier.setIdentifier(applicationIdentifier);
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 

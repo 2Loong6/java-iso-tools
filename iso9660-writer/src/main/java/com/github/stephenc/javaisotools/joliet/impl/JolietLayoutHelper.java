@@ -19,15 +19,11 @@
 
 package com.github.stephenc.javaisotools.joliet.impl;
 
-import java.io.UnsupportedEncodingException;
-
-import com.github.stephenc.javaisotools.iso9660.ISO9660RootDirectory;
+import com.github.stephenc.javaisotools.iso9660.*;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
-import com.github.stephenc.javaisotools.iso9660.FilenameDataReference;
-import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
-import com.github.stephenc.javaisotools.iso9660.ISO9660File;
-import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
+
+import java.nio.charset.StandardCharsets;
 
 public class JolietLayoutHelper extends LayoutHelper {
 
@@ -48,25 +44,19 @@ public class JolietLayoutHelper extends LayoutHelper {
         byte[] original = null;
         int length = 0;
 
-        try {
-            if (string != null) {
-                original = string.getBytes("UTF-16BE"); // UCS-2
-                length = original.length;
-            }
-            for (int i = 0; i < length; i++) {
-                bytes[i] = original[i];
-            }
-            for (int i = length; i < bytes.length; i++) {
-                bytes[i] = 0;
-                i++;
-                if (i < bytes.length) {
-                    bytes[i] = 0x20;
-                }
-            }
-            bytes[bytes.length - 1] = 0; // Zero-terminate String
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (string != null) {
+            original = string.getBytes(StandardCharsets.UTF_16BE); // UCS-2
+            length = original.length;
         }
+        System.arraycopy(original, 0, bytes, 0, length);
+        for (int i = length; i < bytes.length; i++) {
+            bytes[i] = 0;
+            i++;
+            if (i < bytes.length) {
+                bytes[i] = 0x20;
+            }
+        }
+        bytes[bytes.length - 1] = 0; // Zero-terminate String
 
         return bytes;
     }

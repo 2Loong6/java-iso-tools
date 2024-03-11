@@ -19,12 +19,12 @@
 
 package com.github.stephenc.javaisotools.udflib.structures;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
+import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
 import com.github.stephenc.javaisotools.udflib.tools.Checksum;
 import com.github.stephenc.javaisotools.udflib.tools.OSTAUnicode;
-import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class FileSetDescriptor {
 
@@ -79,8 +79,7 @@ public class FileSetDescriptor {
             System.arraycopy(tmpIdentifier, 0, LogicalVolumeIdentifier, 0, length);
 
             LogicalVolumeIdentifier[LogicalVolumeIdentifier.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void setFileSetIdentifier(String fileSetIdentifier) {
@@ -98,8 +97,7 @@ public class FileSetDescriptor {
             System.arraycopy(tmpIdentifier, 0, FileSetIdentifier, 0, length);
 
             FileSetIdentifier[FileSetIdentifier.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void setAbstractFileIdentifier(String abstractFileIdentifier) {
@@ -117,8 +115,7 @@ public class FileSetDescriptor {
             System.arraycopy(tmpIdentifier, 0, AbstractFileIdentifier, 0, length);
 
             AbstractFileIdentifier[AbstractFileIdentifier.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void setCopyrightFileIdentifier(String copyrightFileIdentifier) {
@@ -136,8 +133,7 @@ public class FileSetDescriptor {
             System.arraycopy(tmpIdentifier, 0, CopyrightFileIdentifier, 0, length);
 
             CopyrightFileIdentifier[CopyrightFileIdentifier.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void Load(RandomAccessFile myRandomAccessFile)

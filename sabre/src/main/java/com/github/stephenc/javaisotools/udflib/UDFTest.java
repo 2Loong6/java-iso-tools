@@ -24,6 +24,21 @@ import java.util.Calendar;
 
 public class UDFTest {
 
+    public UDFTest() {
+        System.out.println("UDFTest\n");
+
+        long startTime = Calendar.getInstance().getTimeInMillis();
+
+        //testUDFImageBuilder();
+        testSabreUDFImageBuilder();
+
+        System.out.println("Run-Time: " + (Calendar.getInstance().getTimeInMillis() - startTime) + " Milliseconds");
+    }
+
+    public static void main(String[] args) {
+        new UDFTest();
+    }
+
     private void testUDFImageBuilder() {
         try {
             UDFImageBuilder myUDFImageBuilder = new UDFImageBuilder();
@@ -37,8 +52,7 @@ public class UDFTest {
             myUDFImageBuilder.setImageIdentifier("Test-Disc");
 
             myUDFImageBuilder.writeImage("c:\\temp\\test-disc.iso", UDFRevision.Revision201);
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             System.out.println(myException.toString());
             myException.printStackTrace();
         }
@@ -57,26 +71,10 @@ public class UDFTest {
             mySabreUDF.setImageIdentifier("Test-Disc");
 
             mySabreUDF.writeImage("c:\\temp\\test-disc.iso", UDFRevision.Revision201);
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             System.out.println(myException.toString());
             myException.printStackTrace();
         }
-    }
-
-    public UDFTest() {
-        System.out.println("UDFTest\n");
-
-        long startTime = Calendar.getInstance().getTimeInMillis();
-
-        //testUDFImageBuilder();
-        testSabreUDFImageBuilder();
-
-        System.out.println("Run-Time: " + (Calendar.getInstance().getTimeInMillis() - startTime) + " Milliseconds");
-    }
-
-    public static void main(String[] args) {
-        new UDFTest();
     }
 
 }

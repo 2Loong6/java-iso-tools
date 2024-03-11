@@ -20,35 +20,35 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.util.HashMap;
-import java.util.Stack;
-
 import com.github.stephenc.javaisotools.iso9660.ISO9660RootDirectory;
 import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
 import com.github.stephenc.javaisotools.iso9660.StandardHandler;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
 import com.github.stephenc.javaisotools.iso9660.volumedescriptors.PrimaryVolumeDescriptor;
 import com.github.stephenc.javaisotools.iso9660.volumedescriptors.VolumeDescriptorSetTerminator;
+import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeConfig;
 import com.github.stephenc.javaisotools.sabre.Element;
+import com.github.stephenc.javaisotools.sabre.Fixup;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
-import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeConfig;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
-import com.github.stephenc.javaisotools.sabre.Fixup;
+
+import java.util.HashMap;
+import java.util.Stack;
 
 public class ISO9660Handler extends StandardHandler {
 
-    private Stack elements;
-    private ISO9660Config config;
-    private LayoutHelper helper;
-    private HashMap volumeFixups;
-    private ISO9660Factory factory;
+    private final Stack<Element> elements;
+    private final ISO9660Config config;
+    private final LayoutHelper helper;
+    private final HashMap volumeFixups;
+    private final ISO9660Factory factory;
 
     public ISO9660Handler(StreamHandler streamHandler, ISO9660RootDirectory root, ISO9660Config config,
                           RockRidgeConfig rrConfig) throws HandlerException {
         super(streamHandler, root, config);
-        this.elements = new Stack();
+        this.elements = new Stack<>();
         this.config = config;
-        this.volumeFixups = new HashMap();
+        this.volumeFixups = new HashMap<>();
 
         checkMetadataFiles();
 
@@ -74,21 +74,20 @@ public class ISO9660Handler extends StandardHandler {
         if (element instanceof ISO9660Element) {
             String id = (String) element.getId();
             process(id);
-        } else if (element instanceof FileElement) {
-            FileElement fileElement = (FileElement) element;
+        } else if (element instanceof FileElement fileElement) {
             factory.doFileFixup(fileElement.getFile());
         }
         super.startElement(element);
     }
 
     private void process(String id) throws HandlerException {
-        if (id.equals("VDS")) {
-            doPVD();
-        } else if (id.equals("PTA")) {
-            factory.doPT(ISO9660Constants.TYPE_L_PT);
-            factory.doPT(ISO9660Constants.TYPE_M_PT);
-        } else if (id.equals("DRA")) {
-            factory.doDRA();
+        switch (id) {
+            case "VDS" -> doPVD();
+            case "PTA" -> {
+                factory.doPT(ISO9660Constants.TYPE_L_PT);
+                factory.doPT(ISO9660Constants.TYPE_M_PT);
+            }
+            case "DRA" -> factory.doDRA();
         }
     }
 

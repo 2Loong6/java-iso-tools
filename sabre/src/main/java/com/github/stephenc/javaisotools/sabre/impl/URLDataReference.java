@@ -19,12 +19,12 @@
 
 package com.github.stephenc.javaisotools.sabre.impl;
 
+import com.github.stephenc.javaisotools.sabre.DataReference;
+import com.github.stephenc.javaisotools.sabre.io.LimitingInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
-import com.github.stephenc.javaisotools.sabre.io.LimitingInputStream;
-import com.github.stephenc.javaisotools.sabre.DataReference;
 
 public class URLDataReference implements DataReference {
 

@@ -21,14 +21,15 @@
 package com.github.stephenc.javaisotools.rockridge.impl;
 
 import com.github.stephenc.javaisotools.iso9660.ConfigException;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RockRidgeConfig {
 
-    private Map<String, Integer> patternToModeMap = new HashMap<String, Integer>();
-    
+    private final Map<String, Integer> patternToModeMap = new HashMap<>();
+
     /**
      * Set mkisofs Compatibility<br> mkisofs implements version 1.09 of the Rock Ridge Interchange Protocol, whereas the
      * current version 1.12 was adopted as an IEEE standard. The differences are as follows:<br> 1. The ER System Use
@@ -45,7 +46,6 @@ public class RockRidgeConfig {
      * Set maximum length of directory names
      *
      * @param length Maxiumum amount of characters
-     *
      * @throws ConfigException Invalid length
      */
     public void setMaxDirectoryLength(int length) throws ConfigException {
@@ -59,7 +59,6 @@ public class RockRidgeConfig {
      * Set maximum length of file names
      *
      * @param length Maximum amount of characters
-     *
      * @throws com.github.stephenc.javaisotools.iso9660.ConfigException Invalid length
      */
     public void setMaxFilenameLength(int length) throws ConfigException {
@@ -89,16 +88,18 @@ public class RockRidgeConfig {
 
     /**
      * Add a new mode for a specific file pattern.
+     *
      * @param pattern the pattern to be matched
-     * @param mode the POSIX file mode for matching filenames
+     * @param mode    the POSIX file mode for matching filenames
      */
     public void addModeForPattern(String pattern, Integer mode) {
-        System.out.println(String.format("*** Recording pattern \"%s\" with mode %o", pattern, mode));
+        System.out.printf("*** Recording pattern \"%s\" with mode %o%n", pattern, mode);
         patternToModeMap.put(pattern, mode);
     }
 
     /**
      * Retrieve the pattern-to-mode map in an unmodifiable form.
+     *
      * @return the pattern-to-mode map in an unmodifiable form.
      */
     public Map<String, Integer> getPatternToModeMap() {

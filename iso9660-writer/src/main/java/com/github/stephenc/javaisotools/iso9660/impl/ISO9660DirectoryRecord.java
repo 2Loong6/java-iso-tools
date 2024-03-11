@@ -19,26 +19,26 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-
 import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
 import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothShortDataReference;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
+import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.Fixup;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothShortDataReference;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
-import com.github.stephenc.javaisotools.sabre.DataReference;
+
+import java.util.Date;
+import java.util.HashMap;
 
 public class ISO9660DirectoryRecord {
 
+    public boolean hide, isDirectory;
     private StreamHandler streamHandler;
     private int volSeqNo;
-    private DataReference filenameDataReference;
-    public boolean hide, isDirectory;
+    private final DataReference filenameDataReference;
 
     /**
      * File
@@ -96,7 +96,7 @@ public class ISO9660DirectoryRecord {
     }
 
     public HashMap doDR() throws HandlerException {
-        HashMap memory = new HashMap();
+        HashMap memory = new HashMap<>();
         int length = 0;
 
         // Length of Directory Record (including System Use Area)
@@ -123,7 +123,7 @@ public class ISO9660DirectoryRecord {
         Date now = new Date();
         ISO9660ShortDateDataReference date = new ISO9660ShortDateDataReference(now);
         streamHandler.data(date);
-        length += date.getLength();
+        length += (int) date.getLength();
 
         // File Flags
         byte fileFlags = getFileFlags();
@@ -148,7 +148,7 @@ public class ISO9660DirectoryRecord {
 
         // File Identifier
         streamHandler.data(filenameDataReference);
-        length += filenameDataReference.getLength();
+        length += (int) filenameDataReference.getLength();
 
         // Padding Field
         if (filenameDataReference.getLength() % 2 == 0) {
@@ -156,7 +156,7 @@ public class ISO9660DirectoryRecord {
             length += 1;
         }
 
-        memory.put("drLength", new Integer(length));
+        memory.put("drLength", length);
 
         return memory;
     }

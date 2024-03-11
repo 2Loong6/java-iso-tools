@@ -19,36 +19,18 @@
 
 package com.github.stephenc.javaisotools.udflib;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
-
 public class UDFImageBuilderAntTask extends Task {
 
-    public static class FileLocation {
-
-        private String location;
-
-        private boolean childfilesonly = false;
-
-        public void setLocation(String location) {
-            this.location = location;
-        }
-
-        public void setChildfilesonly(boolean childfilesonly) {
-            this.childfilesonly = childfilesonly;
-        }
-    }
-
     private String imageIdentifier;
-
     private String imageOutputFile;
-
     private String udfRevision = "2.60";
-
     private List<FileLocation> fileLocations = new ArrayList<FileLocation>();
 
     public void setImageIdentifier(String imageIdentifier) {
@@ -106,6 +88,21 @@ public class UDFImageBuilderAntTask extends Task {
         } catch (Exception ex) {
             throw new BuildException(ex.toString());
 
+        }
+    }
+
+    public static class FileLocation {
+
+        private String location;
+
+        private boolean childfilesonly = false;
+
+        public void setLocation(String location) {
+            this.location = location;
+        }
+
+        public void setChildfilesonly(boolean childfilesonly) {
+            this.childfilesonly = childfilesonly;
         }
     }
 }

@@ -19,11 +19,6 @@
 
 package com.github.stephenc.javaisotools.iso9660;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Vector;
-
 import com.github.stephenc.javaisotools.eltorito.impl.ElToritoConfig;
 import com.github.stephenc.javaisotools.iso9660.impl.CreateISO;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Config;
@@ -36,10 +31,14 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.FileSet;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
+
 public class ISOTask extends MatchingTask {
 
     private File baseDir, destFile, bootImage;
-    private Vector filesets;
+    private Vector<FileSet> filesets;
     private String name, system, publisher, dataPreparer, copyrightFile, bootImageID,
             bootImageEmulation, bootImagePlatformID, movedDirectoriesStoreName;
     private boolean allowASCII, restrictDirDepthTo8, forceDotDelimiter,
@@ -50,7 +49,7 @@ public class ISOTask extends MatchingTask {
 
     public void init() {
         baseDir = destFile = bootImage = null;
-        filesets = new Vector();
+        filesets = new Vector<>();
         name = system = publisher = dataPreparer = bootImageID = "";
         copyrightFile = null;
         movedDirectoriesStoreName = "rr_moved";
@@ -72,7 +71,7 @@ public class ISOTask extends MatchingTask {
     }
 
     public void execute() throws BuildException {
-        if (baseDir == null && filesets.size() == 0) {
+        if (baseDir == null && filesets.isEmpty()) {
             throw new BuildException("basedir attribute must be set, "
                     + "or at least "
                     + "one fileset must be given!");
@@ -212,17 +211,13 @@ public class ISOTask extends MatchingTask {
             filesets.addElement(fs);
         }
 
-        Iterator it = filesets.iterator();
-        while (it.hasNext()) {
-            FileSet fs = (FileSet) it.next();
-
+        for (FileSet o : filesets) {
             String prefix = "";
-            if (fs instanceof ISOFileSet) {
-                ISOFileSet ifs = (ISOFileSet) fs;
+            if (o instanceof ISOFileSet ifs) {
                 prefix = ifs.getPrefix();
             }
 
-            createHierarchy(root, fs, prefix);
+            createHierarchy(root, o, prefix);
         }
     }
 
@@ -231,28 +226,28 @@ public class ISOTask extends MatchingTask {
 
         // Add directories
         String[] dirs = ds.getIncludedDirectories();
-        for (int i = 0; i < dirs.length; i++) {
-            if (!dirs[i].equals("")) {
-                String path = checkPrefix(dirs[i], prefix);
+        for (String s : dirs) {
+            if (!s.isEmpty()) {
+                String path = checkPrefix(s, prefix);
                 root.addPath(path);
             }
         }
 
         // Add files
         String[] files = ds.getIncludedFiles();
-        for (int i = 0; i < files.length; i++) {
+        for (String file : files) {
             ISO9660Directory dir = root;
-            String path = checkPrefix(files[i], prefix);
-            if (path.indexOf(File.separator) >= 0) {
+            String path = checkPrefix(file, prefix);
+            if (path.contains(File.separator)) {
                 path = path.substring(0, path.lastIndexOf(File.separator));
                 dir = root.addPath(path);
             }
-            dir.addFile(new File(ds.getBasedir(), files[i]));
+            dir.addFile(new File(ds.getBasedir(), file));
         }
     }
 
     private String checkPrefix(String path, String prefix) {
-        if (prefix.length() > 0) {
+        if (!prefix.isEmpty()) {
             prefix += "/";
         }
 

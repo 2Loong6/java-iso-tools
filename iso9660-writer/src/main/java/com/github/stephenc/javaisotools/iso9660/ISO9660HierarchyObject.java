@@ -19,42 +19,42 @@
 
 package com.github.stephenc.javaisotools.iso9660;
 
-public interface ISO9660HierarchyObject extends Cloneable, Comparable {
+public interface ISO9660HierarchyObject extends Cloneable, Comparable<ISO9660HierarchyObject> {
 
     /**
      * Returns the name of the hierarchy object
      *
      * @return Name
      */
-    public String getName();
-
-    /**
-     * Returns the root of the directory hierarchy
-     *
-     * @return Root
-     */
-    public ISO9660RootDirectory getRoot();
-
-    /**
-     * Returns whether the hierarchy object is a directory
-     *
-     * @return Whether this is a directory
-     */
-    public boolean isDirectory();
+    String getName();
 
     /**
      * Set the name of the hierarchy object
      *
      * @param name Name
      */
-    public void setName(String name);
+    void setName(String name);
+
+    /**
+     * Returns the root of the directory hierarchy
+     *
+     * @return Root
+     */
+    ISO9660RootDirectory getRoot();
+
+    /**
+     * Returns whether the hierarchy object is a directory
+     *
+     * @return Whether this is a directory
+     */
+    boolean isDirectory();
 
     /**
      * Returns the parent directory of this hierarchy object
      *
      * @return Parent directory
      */
-    public ISO9660Directory getParentDirectory();
+    ISO9660Directory getParentDirectory();
 
     /**
      * Returns the path from the root to this hierarchy object with each path component separated by File.separator so
@@ -62,12 +62,12 @@ public interface ISO9660HierarchyObject extends Cloneable, Comparable {
      *
      * @return Path
      */
-    public String getISOPath();
+    String getISOPath();
 
     /**
      * Returns an Object identifying this hierarchy object
      *
      * @return Identifying Object
      */
-    public Object getID();
+    Object getID();
 }

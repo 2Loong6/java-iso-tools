@@ -19,30 +19,25 @@
 
 package com.github.stephenc.javaisotools.eltorito.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Constants;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Element;
+import com.github.stephenc.javaisotools.iso9660.impl.LogicalSectorElement;
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFWordDataReference;
 import com.github.stephenc.javaisotools.iso9660.volumedescriptors.BootRecord;
 import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
-import com.github.stephenc.javaisotools.sabre.impl.FileDataReference;
-import com.github.stephenc.javaisotools.iso9660.impl.LogicalSectorElement;
 import com.github.stephenc.javaisotools.sabre.Fixup;
+import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
+import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
+
+import java.io.*;
+import java.util.Arrays;
 
 public class ElToritoHandler extends ChainingStreamHandler {
 
-    private ElToritoConfig config;
+    private final ElToritoConfig config;
     private Fixup bootCatalogLocation, bootImageLocation;
 
     public ElToritoHandler(StreamHandler streamHandler, ElToritoConfig config) {
@@ -143,7 +138,7 @@ public class ElToritoHandler extends ChainingStreamHandler {
             byte[] buffer = new byte[0x2000];
             while (fis.available() > 0) {
                 int len = fis.read(buffer);
-                for (int i = 0; i < len;) {
+                for (int i = 0; i < len; ) {
                     long temp = buffer[i++] & 0xFF;
                     temp |= (buffer[i++] << 8) & 0xFF00;
                     temp |= (buffer[i++] << 16) & 0xFF0000;
@@ -211,8 +206,6 @@ public class ElToritoHandler extends ChainingStreamHandler {
             config.setBootImage(new ISO9660File(orgFile));
 
             System.out.println("Patched boot image at " + orgFile.getPath());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

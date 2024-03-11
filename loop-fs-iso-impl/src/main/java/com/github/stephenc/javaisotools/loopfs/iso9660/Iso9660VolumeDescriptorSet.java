@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2010. Stephen Connolly.
  * Copyright (c) 2006-2007. loopy project (http://loopy.sourceforge.net).
- *  
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *  
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -19,13 +19,12 @@
 
 package com.github.stephenc.javaisotools.loopfs.iso9660;
 
-import java.io.IOException;
-
-import com.github.stephenc.javaisotools.loopfs.api.FileEntry;
 import com.github.stephenc.javaisotools.loopfs.api.LoopFileSystemException;
 import com.github.stephenc.javaisotools.loopfs.spi.VolumeDescriptorSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
 
 public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660FileEntry> {
 
@@ -38,7 +37,9 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
     private static final Log log = LogFactory.getLog(Iso9660VolumeDescriptorSet.class);
 
     private final Iso9660FileSystem isoFile;
-
+    // supplementary
+    public String encoding = Constants.DEFAULT_ENCODING;
+    public String escapeSequences;
     // common
     private String systemIdentifier;
     private String volumeSetIdentifier;
@@ -47,7 +48,6 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
     private String preparer;
     private String application;
     private Iso9660FileEntry rootDirectoryEntry;
-
     // primary
     private String standardIdentifier;
     private long totalBlocks;
@@ -62,11 +62,6 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
     private long locationOfOptionalLittleEndianPathTable;
     private long locationOfBigEndianPathTable;
     private long locationOfOptionalBigEndianPathTable;
-
-    // supplementary
-    public String encoding = Constants.DEFAULT_ENCODING;
-    public String escapeSequences;
-
     private boolean hasPrimary = false;
     private boolean hasSupplementary = false;
 
@@ -218,20 +213,18 @@ public class Iso9660VolumeDescriptorSet implements VolumeDescriptorSet<Iso9660Fi
      * @return
      */
     private String getEncoding(String escapeSequences) {
-        String encoding = null;
-
-        if (escapeSequences.equals("%/@")) {
-            // UCS-2 level 1
-            encoding = "UTF-16BE";
-        } else if (escapeSequences.equals("%/C")) {
-            // UCS-2 level 2
-            encoding = "UTF-16BE";
-        } else if (escapeSequences.equals("%/E")) {
-            // UCS-2 level 3
-            encoding = "UTF-16BE";
-        }
-
-        return encoding;
+        return switch (escapeSequences) {
+            case "%/@" ->
+                // UCS-2 level 1
+                    "UTF-16BE";
+            case "%/C" ->
+                // UCS-2 level 2
+                    "UTF-16BE";
+            case "%/E" ->
+                // UCS-2 level 3
+                    "UTF-16BE";
+            default -> null;
+        };
     }
 
     /**

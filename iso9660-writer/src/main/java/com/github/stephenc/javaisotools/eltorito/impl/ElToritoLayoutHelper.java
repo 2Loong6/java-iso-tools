@@ -19,14 +19,14 @@
 
 package com.github.stephenc.javaisotools.eltorito.impl;
 
-import java.io.UnsupportedEncodingException;
-
 import com.github.stephenc.javaisotools.iso9660.FilenameDataReference;
+import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
+import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
-import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
-import com.github.stephenc.javaisotools.iso9660.ISO9660File;
+
+import java.nio.charset.StandardCharsets;
 
 public class ElToritoLayoutHelper extends LayoutHelper {
 
@@ -48,16 +48,10 @@ public class ElToritoLayoutHelper extends LayoutHelper {
         byte[] bytes = new byte[targetByteLength];
         byte[] original;
 
-        try {
-            original = string.getBytes("ISO-8859-1"); // ISO Latin 1
-            for (int i = 0; i < original.length; i++) {
-                bytes[i] = original[i];
-            }
-            for (int i = original.length; i < bytes.length; i++) {
-                bytes[i] = 0;
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        original = string.getBytes(StandardCharsets.ISO_8859_1); // ISO Latin 1
+        System.arraycopy(original, 0, bytes, 0, original.length);
+        for (int i = original.length; i < bytes.length; i++) {
+            bytes[i] = 0;
         }
 
         return bytes;

@@ -19,11 +19,11 @@
 
 package com.github.stephenc.javaisotools.iso9660;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public abstract class FilenameDataReference implements DataReference {
 
@@ -41,12 +41,12 @@ public abstract class FilenameDataReference implements DataReference {
         setName(name);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public abstract long getLength();

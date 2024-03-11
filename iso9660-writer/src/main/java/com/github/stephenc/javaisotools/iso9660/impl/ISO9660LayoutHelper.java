@@ -19,15 +19,11 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.io.UnsupportedEncodingException;
-
-import com.github.stephenc.javaisotools.iso9660.FilenameDataReference;
-import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
-import com.github.stephenc.javaisotools.iso9660.ISO9660File;
-import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
+import com.github.stephenc.javaisotools.iso9660.*;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.iso9660.ISO9660RootDirectory;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
+
+import java.nio.charset.StandardCharsets;
 
 public class ISO9660LayoutHelper extends LayoutHelper {
 
@@ -48,19 +44,13 @@ public class ISO9660LayoutHelper extends LayoutHelper {
         byte[] original = null;
         int length = 0;
 
-        try {
-            if (string != null) {
-                original = string.getBytes("ISO-8859-1"); // ISO Latin 1
-                length = original.length;
-            }
-            for (int i = 0; i < length; i++) {
-                bytes[i] = original[i];
-            }
-            for (int i = length; i < bytes.length; i++) {
-                bytes[i] = 0x20;
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (string != null) {
+            original = string.getBytes(StandardCharsets.ISO_8859_1); // ISO Latin 1
+            length = original.length;
+        }
+        System.arraycopy(original, 0, bytes, 0, length);
+        for (int i = length; i < bytes.length; i++) {
+            bytes[i] = 0x20;
         }
 
         return bytes;

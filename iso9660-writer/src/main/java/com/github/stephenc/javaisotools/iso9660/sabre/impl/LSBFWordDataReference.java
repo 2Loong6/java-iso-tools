@@ -19,15 +19,15 @@
 
 package com.github.stephenc.javaisotools.iso9660.sabre.impl;
 
+import com.github.stephenc.javaisotools.sabre.DataReference;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.github.stephenc.javaisotools.sabre.DataReference;
-
 public class LSBFWordDataReference implements DataReference {
 
-    private long value = 0;
+    private final long value;
 
     public LSBFWordDataReference(long value) {
         this.value = value;
@@ -44,7 +44,7 @@ public class LSBFWordDataReference implements DataReference {
         buffer[0] = (byte) (this.value & 0x000000FF);
         buffer[1] = (byte) ((this.value & 0x0000FF00) >> 8);
         buffer[2] = (byte) ((this.value & 0x00FF0000) >> 16);
-        buffer[3] = (byte) ((this.value & 0xFF000000) >> 24);
+        buffer[3] = (byte) ((this.value & 0xFF000000L) >> 24);
 
         return new ByteArrayInputStream(buffer);
     }

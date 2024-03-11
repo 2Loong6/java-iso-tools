@@ -39,13 +39,6 @@ public class UDFImageBuilderFile implements Comparable<UDFImageBuilderFile> {
     private int FileLinkCount = 1;
     private UDFImageBuilderFile parent;
 
-    public enum FileType {
-
-        File,
-        Directory,
-        // Symlink			// TODO: maybe support symlinks
-    }
-
     public UDFImageBuilderFile(File sourceFile)
             throws Exception {
         childs = new ArrayList<UDFImageBuilderFile>();
@@ -252,6 +245,13 @@ public class UDFImageBuilderFile implements Comparable<UDFImageBuilderFile> {
 
     public void setParent(UDFImageBuilderFile parent) {
         this.parent = parent;
+    }
+
+    public enum FileType {
+
+        File,
+        Directory,
+        // Symlink			// TODO: maybe support symlinks
     }
 
 }

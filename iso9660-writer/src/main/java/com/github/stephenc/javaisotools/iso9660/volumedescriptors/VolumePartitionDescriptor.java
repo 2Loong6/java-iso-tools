@@ -19,17 +19,18 @@
 
 package com.github.stephenc.javaisotools.iso9660.volumedescriptors;
 
-import java.util.HashMap;
-
 import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
 import com.github.stephenc.javaisotools.iso9660.PartitionConfig;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Constants;
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
 import com.github.stephenc.javaisotools.sabre.Fixup;
+import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class VolumePartitionDescriptor extends ISO9660VolumeDescriptor {
 
@@ -40,21 +41,13 @@ public class VolumePartitionDescriptor extends ISO9660VolumeDescriptor {
         this.systemId = this.volumePartitionId = "";
     }
 
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
-
-    public void setVolumePartitionId(String volumePartitionId) {
-        this.volumePartitionId = volumePartitionId;
-    }
-
     public void setMetadata(PartitionConfig config) {
         setSystemId(config.getSystemId());
         setVolumePartitionId(config.getVolumePartitionId());
     }
 
-    public HashMap doVPD() throws HandlerException {
-        HashMap memory = new HashMap();
+    public Map<String, Fixup> doVPD() throws HandlerException {
+        Map<String, Fixup> memory = new HashMap<>();
 
         // Volume Descriptor Type: Volume Partition
         streamHandler.data(getType());
@@ -92,9 +85,17 @@ public class VolumePartitionDescriptor extends ISO9660VolumeDescriptor {
         return new ByteArrayDataReference(bytes);
     }
 
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
     private ByteArrayDataReference getVolumePartitionId() throws HandlerException {
         byte[] bytes = helper.pad(volumePartitionId, 32);
         return new ByteArrayDataReference(bytes);
+    }
+
+    public void setVolumePartitionId(String volumePartitionId) {
+        this.volumePartitionId = volumePartitionId;
     }
 
 }

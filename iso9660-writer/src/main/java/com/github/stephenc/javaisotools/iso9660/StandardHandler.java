@@ -19,16 +19,14 @@
 
 package com.github.stephenc.javaisotools.iso9660;
 
-import java.util.Iterator;
-
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
 
 public class StandardHandler extends ChainingStreamHandler {
 
-    private ISO9660Directory root;
-    private StandardConfig config;
+    private final ISO9660Directory root;
+    private final StandardConfig config;
 
     public StandardHandler(StreamHandler streamHandler, ISO9660Directory root, StandardConfig config) {
         super(streamHandler, streamHandler);

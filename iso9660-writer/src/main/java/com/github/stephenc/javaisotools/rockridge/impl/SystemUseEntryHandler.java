@@ -19,33 +19,27 @@
 
 package com.github.stephenc.javaisotools.rockridge.impl;
 
-import java.util.Stack;
-
-import com.github.stephenc.javaisotools.sabre.ContentHandler;
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.Fixup;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
+import com.github.stephenc.javaisotools.sabre.*;
+import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
-import com.github.stephenc.javaisotools.sabre.StructureHandler;
-import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
+
+import java.util.Stack;
 
 public class SystemUseEntryHandler extends ChainingStreamHandler {
 
-    private Stack elements;
+    private final Stack<Element> elements;
     private int length = 0;
     private Fixup lengthFixup;
 
     public SystemUseEntryHandler(StructureHandler chainingStructureHandler, ContentHandler chainingContentHandler) {
         super(chainingStructureHandler, chainingContentHandler);
-        this.elements = new Stack();
+        this.elements = new Stack<>();
     }
 
     public void startElement(Element element) throws HandlerException {
         elements.push(element);
-        if (element instanceof SystemUseEntryElement) {
-            SystemUseEntryElement sue = (SystemUseEntryElement) element;
+        if (element instanceof SystemUseEntryElement sue) {
 
             // Reset byte counter
             length = 0;
@@ -64,17 +58,17 @@ public class SystemUseEntryHandler extends ChainingStreamHandler {
     }
 
     public void data(DataReference reference) throws HandlerException {
-        length += reference.getLength();
+        length += (int) reference.getLength();
         super.data(reference);
     }
 
     public Fixup fixup(DataReference reference) throws HandlerException {
-        length += reference.getLength();
+        length += (int) reference.getLength();
         return super.fixup(reference);
     }
 
     public void endElement() throws HandlerException {
-        Element element = (Element) elements.pop();
+        Element element = elements.pop();
         if (element instanceof SystemUseEntryElement) {
             // Write and close Entry Length Fixup
             if (length > 255) {

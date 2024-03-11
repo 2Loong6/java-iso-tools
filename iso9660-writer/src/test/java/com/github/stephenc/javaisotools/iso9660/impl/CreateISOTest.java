@@ -18,36 +18,28 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Properties;
-import java.util.Random;
-
-import org.junit.*;
-import org.hamcrest.*;
-
+import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
 import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.ISO9660RootDirectory;
 import com.github.stephenc.javaisotools.joliet.impl.JolietConfig;
 import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeConfig;
-import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
-import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.FileType;
+import org.apache.commons.vfs2.VFS;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.VFS;
-import org.codehaus.plexus.util.IOUtil;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
+import java.util.Random;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Some simple ISO file system tests.
@@ -58,21 +50,17 @@ import static org.junit.Assert.*;
 public class CreateISOTest {
 
     private static File workDir;
-    
+
     private Random entropy = new Random();
 
-    @BeforeClass
+    @BeforeAll
     public static void loadConfiguration() throws Exception {
         Properties props = new Properties();
-        InputStream is = null;
-        try {
-            is = CreateISOTest.class.getResourceAsStream("/test.properties");
+        try (InputStream is = CreateISOTest.class.getResourceAsStream("/test.properties")) {
             props.load(is);
-        } finally {
-            IOUtil.close(is);
         }
         workDir = new File(props.getProperty("work-directory"));
-        assertThat("We can create our work directory", workDir.mkdirs() || workDir.isDirectory(), is(true));
+        assertTrue(workDir.mkdirs() || workDir.isDirectory(), "We can create our work directory");
     }
 
     @Test
@@ -87,8 +75,8 @@ public class CreateISOTest {
         CreateISO iso = new CreateISO(streamHandler, root);
         iso.process(new ISO9660Config(), null, null, null);
 
-        assertThat(outfile.isFile(), is(true));
-        assertThat(outfile.length(), not(is(0L)));
+        assertTrue(outfile.isFile());
+        assertNotEquals(0L, outfile.length());
 
         // TODO use loop-fs to check that the iso is empty
     }
@@ -100,8 +88,8 @@ public class CreateISOTest {
         File outfile = new File(workDir, "one-file.iso");
         File contents = new File(workDir, "readme.txt");
         OutputStream os = new FileOutputStream(contents);
-        IOUtil.copy(contentString, os);
-        IOUtil.close(os);
+        IOUtils.write(contentString, os, StandardCharsets.UTF_8);
+        IOUtils.close(os);
 
         // Directory hierarchy, starting from the root
         ISO9660RootDirectory.MOVED_DIRECTORIES_STORE_NAME = "rr_moved";
@@ -128,21 +116,21 @@ public class CreateISOTest {
 
         iso.process(iso9660Config, rrConfig, jolietConfig, null);
 
-        assertThat(outfile.isFile(), is(true));
-        assertThat(outfile.length(), not(is(0L)));
+        assertTrue(outfile.isFile());
+        assertNotEquals(0L, outfile.length());
 
         FileSystemManager fsManager = VFS.getManager();
         // TODO figure out why we can't just do
         // FileObject isoFile = fsManager.resolveFile("iso:/" + outfile.getPath() + "!/");
         // smells like a bug between loop-fs and commons-vfs
         FileObject isoFile = fsManager.resolveFile("iso:/" + outfile.getPath() + "!/readme.txt").getParent();
-        assertThat(isoFile.getType(), is(FileType.FOLDER));
+        assertEquals(FileType.FOLDER, isoFile.getType());
 
         FileObject[] children = isoFile.getChildren();
-        assertThat(children.length, is(1));
-        assertThat(children[0].getName().getBaseName(), is("readme.txt"));
-        assertThat(children[0].getType(), is(FileType.FILE));
-        assertThat(IOUtil.toString(children[0].getContent().getInputStream()), is(contentString));
+        assertEquals(1, children.length);
+        assertEquals("readme.txt", children[0].getName().getBaseName());
+        assertEquals(FileType.FILE, children[0].getType());
+        assertEquals(contentString, IOUtils.toString(children[0].getContent().getInputStream(), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -151,12 +139,12 @@ public class CreateISOTest {
         File outfile = new File(workDir, "test.iso");
         File contentsA = new File(workDir, "a.txt");
         OutputStream os = new FileOutputStream(contentsA);
-        IOUtil.copy("Hello", os);
-        IOUtil.close(os);
+        IOUtils.write("Hello", os, StandardCharsets.UTF_8);
+        IOUtils.close(os);
         File contentsB = new File(workDir, "b.txt");
         os = new FileOutputStream(contentsB);
-        IOUtil.copy("Goodbye", os);
-        IOUtil.close(os);
+        IOUtils.write("Goodbye", os, StandardCharsets.UTF_8);
+        IOUtils.close(os);
 
         // Directory hierarchy, starting from the root
         ISO9660RootDirectory.MOVED_DIRECTORIES_STORE_NAME = "rr_moved";
@@ -185,22 +173,22 @@ public class CreateISOTest {
 
         iso.process(iso9660Config, rrConfig, jolietConfig, null);
 
-        assertThat(outfile.isFile(), is(true));
-        assertThat(outfile.length(), not(is(0L)));
+        assertTrue(outfile.isFile());
+        assertNotEquals(0, outfile.length());
 
         FileSystemManager fsManager = VFS.getManager();
         FileObject isoFile = fsManager.resolveFile("iso:/" + outfile.getPath() + "!/root");
 
         FileObject t = isoFile.getChild("a.txt");
-        assertThat(t, CoreMatchers.<Object>notNullValue());
-        assertThat(t.getType(), is(FileType.FILE));
-        assertThat(t.getContent().getSize(), is(5L));
-        assertThat(IOUtil.toString(t.getContent().getInputStream()), is("Hello"));
+        assertNotNull(t);
+        assertEquals(FileType.FILE, t.getType());
+        assertEquals(5, t.getContent().getSize());
+        assertEquals("Hello", IOUtils.toString(t.getContent().getInputStream(), StandardCharsets.UTF_8));
         t = isoFile.getChild("b.txt");
-        assertThat(t, CoreMatchers.<Object>notNullValue());
-        assertThat(t.getType(), is(FileType.FILE));
-        assertThat(t.getContent().getSize(), is(7L));
-        assertThat(IOUtil.toString(t.getContent().getInputStream()), is("Goodbye"));
+        assertNotNull(t);
+        assertEquals(FileType.FILE, t.getType());
+        assertEquals(7, t.getContent().getSize());
+        assertEquals("Goodbye", IOUtils.toString(t.getContent().getInputStream(), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -209,7 +197,7 @@ public class CreateISOTest {
         // Output file
         File outfile = new File(workDir, "big.iso");
         File rootDir = new File(workDir, "big");
-        assertThat(rootDir.isDirectory() || rootDir.mkdirs(), is(true));
+        assertTrue(rootDir.isDirectory() || rootDir.mkdirs());
 
         // Directory hierarchy, starting from the root
         ISO9660RootDirectory.MOVED_DIRECTORIES_STORE_NAME = "rr_moved";
@@ -219,12 +207,8 @@ public class CreateISOTest {
             int length = entropy.nextInt(1024 * 10 + 1);
             byte[] contents = new byte[length];
             entropy.nextBytes(contents);
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(content);
-                 fos.write(contents);
-            } finally {
-                IOUtil.close(fos);
+            try (FileOutputStream fos = new FileOutputStream(content)) {
+                fos.write(contents);
             }
             root.addFile(content);
         }
@@ -248,32 +232,32 @@ public class CreateISOTest {
 
         iso.process(iso9660Config, rrConfig, jolietConfig, null);
 
-        assertThat(outfile.isFile(), is(true));
-        assertThat(outfile.length(), not(is(0L)));
+        assertTrue(outfile.isFile());
+        assertNotEquals(0, outfile.length());
 
         FileSystemManager fsManager = VFS.getManager();
         for (int i = 0; i < numFiles; i++) {
-            File content = new File(rootDir, Integer.toString(i) + ".bin");
-            FileObject t = fsManager.resolveFile("iso:/" + outfile.getPath() + "!/" + Integer.toString(i) + ".bin");
-            assertThat(t, CoreMatchers.<Object>notNullValue());
-            assertThat(t.getType(), is(FileType.FILE));
-            assertThat(t.getContent().getSize(), is(content.length()));
-            assertThat(IOUtil.toByteArray(t.getContent().getInputStream()), is(IOUtil.toByteArray(new FileInputStream(content))));
+            File content = new File(rootDir, i + ".bin");
+            FileObject t = fsManager.resolveFile("iso:/" + outfile.getPath() + "!/" + i + ".bin");
+            assertNotNull(t);
+            assertEquals(FileType.FILE, t.getType());
+            assertEquals(content.length(), t.getContent().getSize());
+            assertArrayEquals(IOUtils.toByteArray(new FileInputStream(content)), IOUtils.toByteArray(t.getContent().getInputStream()));
         }
     }
 
     @Test
     public void canCreateAnIsoTopDownHierarchy() throws Exception {
-		// Output file
+        // Output file
         File outfile = new File(workDir, "test.iso");
         File contentsA = new File(workDir, "a.txt");
         OutputStream os = new FileOutputStream(contentsA);
-        IOUtil.copy("Hello", os);
-        IOUtil.close(os);
+        IOUtils.write("Hello", os, StandardCharsets.UTF_8);
+        IOUtils.close(os);
         File contentsB = new File(workDir, "b.txt");
         os = new FileOutputStream(contentsB);
-        IOUtil.copy("Goodbye", os);
-        IOUtil.close(os);
+        IOUtils.write("Goodbye", os, StandardCharsets.UTF_8);
+        IOUtils.close(os);
 
         // Top down
         ISO9660RootDirectory root = new ISO9660RootDirectory();
@@ -302,22 +286,22 @@ public class CreateISOTest {
 
         iso.process(iso9660Config, rrConfig, jolietConfig, null);
 
-        assertThat(outfile.isFile(), is(true));
-        assertThat(outfile.length(), not(is(0L)));
+        assertTrue(outfile.isFile());
+        assertNotEquals(0, outfile.length());
     }
 
     @Test
     public void canCreateAnIsoBottomUpHierarchy() throws Exception {
-		// Output file
+        // Output file
         File outfile = new File(workDir, "test.iso");
         File contentsA = new File(workDir, "a.txt");
         OutputStream os = new FileOutputStream(contentsA);
-        IOUtil.copy("Hello", os);
-        IOUtil.close(os);
+        IOUtils.write("Hello", os, StandardCharsets.UTF_8);
+        IOUtils.close(os);
         File contentsB = new File(workDir, "b.txt");
         os = new FileOutputStream(contentsB);
-        IOUtil.copy("Goodbye", os);
-        IOUtil.close(os);
+        IOUtils.write("Goodbye", os, StandardCharsets.UTF_8);
+        IOUtils.close(os);
 
         // Bottom up
         ISO9660Directory n3 = new ISO9660Directory("D3");
@@ -349,80 +333,78 @@ public class CreateISOTest {
 
         iso.process(iso9660Config, rrConfig, jolietConfig, null);
 
-        assertThat(outfile.isFile(), is(true));
-        assertThat(outfile.length(), not(is(0L)));
+        assertTrue(outfile.isFile());
+        assertNotEquals(0, outfile.length());
     }
 
     @Test
     public void canOpenFakeIso() throws Exception {
-    	final String contentString = "This is a text file, not an iso";
+        final String contentString = "This is a text file, not an iso";
         // Output file
         File fakeIso = new File(workDir, "fake.iso");
         OutputStream os = new FileOutputStream(fakeIso);
-        IOUtil.copy(contentString, os);
-        IOUtil.close(os);
+        IOUtils.write(contentString, os, StandardCharsets.UTF_8);
+        IOUtils.close(os);
 
         // Trying to open a fake iso
         FileSystemManager fsManager = VFS.getManager();
         FileObject fo = fsManager.resolveFile("iso:/" + fakeIso.getPath() + "!/");
-        assertFalse("The file '" + fakeIso.getName() + "' is not a valid iso file", fo.exists());
+        assertFalse(fo.exists(), "The file '" + fakeIso.getName() + "' is not a valid iso file");
     }
-    
+
     @Test
-	public void cahShortenLongFileNames() throws Exception {
-    	 File outfile = new File(workDir, "64chars.iso");
-    	 
-    	 ISO9660RootDirectory root = new ISO9660RootDirectory();
-    	 
-   		 root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)) , "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.wsdl", 1121040000l));
-   		 root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)) , "yxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.wsdl", 1121040000l));
+    public void cahShortenLongFileNames() throws Exception {
+        File outfile = new File(workDir, "64chars.iso");
 
-   		 root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)) , "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 1121040000l));
-   		 root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)) , "yxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 1121040000l));
-    	 
-    	 StreamHandler streamHandler = new ISOImageFileHandler(outfile);
-         CreateISO iso = new CreateISO(streamHandler, root);
-         
-         ISO9660Config iso9660Config = new ISO9660Config();
-         iso9660Config.setVolumeID("ISO Test");
-         iso9660Config.setVolumeSetID("ISO Test");
+        ISO9660RootDirectory root = new ISO9660RootDirectory();
 
-         JolietConfig jolietConfig = new JolietConfig();
-         jolietConfig.setVolumeID("ISO Test");
-         jolietConfig.setVolumeSetID("ISO Test");
+        root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.wsdl", 1121040000L));
+        root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)), "yxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.wsdl", 1121040000L));
 
-         iso.process(iso9660Config, null, jolietConfig, null);
-	}
-    
+        root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 1121040000L));
+        root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)), "yxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 1121040000L));
+
+        StreamHandler streamHandler = new ISOImageFileHandler(outfile);
+        CreateISO iso = new CreateISO(streamHandler, root);
+
+        ISO9660Config iso9660Config = new ISO9660Config();
+        iso9660Config.setVolumeID("ISO Test");
+        iso9660Config.setVolumeSetID("ISO Test");
+
+        JolietConfig jolietConfig = new JolietConfig();
+        jolietConfig.setVolumeID("ISO Test");
+        jolietConfig.setVolumeSetID("ISO Test");
+
+        iso.process(iso9660Config, null, jolietConfig, null);
+    }
+
     @Test
-    public void canFailOnTruncatedName() throws Exception
-    {
-		File outfile = new File(workDir, "truncate.iso");
-		 
-		ISO9660RootDirectory root = new ISO9660RootDirectory();
-		 
-		root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)) , "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.wsdl", 1121040000l));
-		 
-		StreamHandler streamHandler = new ISOImageFileHandler(outfile);
-		CreateISO iso = new CreateISO(streamHandler, root);
-		    
-		ISO9660Config iso9660Config = new ISO9660Config();
-		iso9660Config.setVolumeID("ISO Test");
-		iso9660Config.setVolumeSetID("ISO Test");
-		
-		JolietConfig jolietConfig = new JolietConfig();
-		jolietConfig.setVolumeID("ISO Test");
-		jolietConfig.setVolumeSetID("ISO Test");
-		jolietConfig.setMaxCharsInFilename(12);
-		jolietConfig.setFailOnTruncation(true);
-		
-		try {
-			iso.process(iso9660Config, null, jolietConfig, null);
-			
-			Assert.fail("Should have failed because a filename would have been truncated");
-		}
-		catch (HandlerException x) {
-			/* Success: the truncation was noted */
-		}
+    public void canFailOnTruncatedName() throws Exception {
+        File outfile = new File(workDir, "truncate.iso");
+
+        ISO9660RootDirectory root = new ISO9660RootDirectory();
+
+        root.addFile(new ISO9660File(new ByteArrayDataReference("Hello, world!".getBytes(StandardCharsets.UTF_8)), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.wsdl", 1121040000L));
+
+        StreamHandler streamHandler = new ISOImageFileHandler(outfile);
+        CreateISO iso = new CreateISO(streamHandler, root);
+
+        ISO9660Config iso9660Config = new ISO9660Config();
+        iso9660Config.setVolumeID("ISO Test");
+        iso9660Config.setVolumeSetID("ISO Test");
+
+        JolietConfig jolietConfig = new JolietConfig();
+        jolietConfig.setVolumeID("ISO Test");
+        jolietConfig.setVolumeSetID("ISO Test");
+        jolietConfig.setMaxCharsInFilename(12);
+        jolietConfig.setFailOnTruncation(true);
+
+        try {
+            iso.process(iso9660Config, null, jolietConfig, null);
+
+            fail("Should have failed because a filename would have been truncated");
+        } catch (HandlerException x) {
+            /* Success: the truncation was noted */
+        }
     }
 }

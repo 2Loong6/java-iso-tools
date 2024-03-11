@@ -19,18 +19,14 @@
 
 package com.github.stephenc.javaisotools.sabre.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Stack;
-
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.Fixup;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.StreamHandler;
+import com.github.stephenc.javaisotools.sabre.*;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Stack;
 
 public class XMLAtomHandler implements StreamHandler {
 

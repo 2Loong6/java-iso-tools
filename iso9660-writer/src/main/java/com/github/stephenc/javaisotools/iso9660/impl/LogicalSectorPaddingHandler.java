@@ -19,28 +19,23 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.util.Stack;
-
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.EmptyByteArrayDataReference;
-import com.github.stephenc.javaisotools.sabre.ContentHandler;
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.Fixup;
-import com.github.stephenc.javaisotools.sabre.StructureHandler;
+import com.github.stephenc.javaisotools.sabre.*;
 import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
+
+import java.util.Stack;
 
 public class LogicalSectorPaddingHandler extends ChainingStreamHandler {
 
     private long bytesWritten;
-    private Stack elements;
+    private final Stack<Element> elements;
     private boolean padEnd;
 
     public LogicalSectorPaddingHandler(StructureHandler chainingStructureHandler,
                                        ContentHandler chainingContentHandler) {
         super(chainingStructureHandler, chainingContentHandler);
         bytesWritten = 0;
-        elements = new Stack();
+        elements = new Stack<>();
     }
 
     public void setPadEnd(boolean padEnd) {
@@ -59,9 +54,7 @@ public class LogicalSectorPaddingHandler extends ChainingStreamHandler {
     private boolean isSAElement(Object element) {
         if (element instanceof ISO9660Element) {
             String id = (String) ((ISO9660Element) element).getId();
-            if (id.equals("SA")) {
-                return true;
-            }
+            return id.equals("SA");
         }
         return false;
     }

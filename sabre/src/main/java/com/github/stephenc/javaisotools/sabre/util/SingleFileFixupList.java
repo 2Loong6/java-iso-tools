@@ -19,13 +19,13 @@
 
 package com.github.stephenc.javaisotools.sabre.util;
 
+import com.github.stephenc.javaisotools.sabre.Fixup;
+import com.github.stephenc.javaisotools.sabre.impl.FileFixup;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import com.github.stephenc.javaisotools.sabre.Fixup;
-import com.github.stephenc.javaisotools.sabre.impl.FileFixup;
 
 public class SingleFileFixupList {
 

@@ -19,19 +19,15 @@
 
 package com.github.stephenc.javaisotools.eltorito.impl;
 
-import java.io.File;
-
+import com.github.stephenc.javaisotools.iso9660.BootConfig;
 import com.github.stephenc.javaisotools.iso9660.ConfigException;
 import com.github.stephenc.javaisotools.iso9660.ISO9660File;
-import com.github.stephenc.javaisotools.iso9660.BootConfig;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
+
+import java.io.File;
 
 public class ElToritoConfig extends BootConfig {
 
-    private boolean bootable, genBootInfoTable;
-    private int platformID, bootMediaType, loadSegment, systemType, sectorCount;
-    private String idString;
-    private ISO9660File bootImage;
     public static int PLATFORM_ID_X86 = 0;
     public static int PLATFORM_ID_PPC = 1;
     public static int PLATFORM_ID_MAC = 2;
@@ -42,6 +38,10 @@ public class ElToritoConfig extends BootConfig {
     public static int BOOT_MEDIA_TYPE_2_88MEG_DISKETTE = 3;
     public static int BOOT_MEDIA_TYPE_HD = 4;
     public static int LOAD_SEGMENT_7C0 = 0;
+    private boolean bootable, genBootInfoTable;
+    private int platformID, bootMediaType, loadSegment, systemType, sectorCount;
+    private String idString;
+    private ISO9660File bootImage;
 
     /**
      * El Torito Boot Image configuration
@@ -52,7 +52,6 @@ public class ElToritoConfig extends BootConfig {
      * @param idString    Identifier String
      * @param sectorCount Boot Image Sector Count
      * @param loadSegment Boot Image Load Segment
-     *
      * @throws HandlerException Problems converting to ISO9660File
      * @throws ConfigException  String too long or invalid platform/emulation mode
      */
@@ -107,6 +106,15 @@ public class ElToritoConfig extends BootConfig {
     }
 
     /**
+     * Generate Boot Info Table
+     *
+     * @return Whether a boot info table is to be generated
+     */
+    public boolean getGenBootInfoTable() {
+        return this.genBootInfoTable;
+    }
+
+    /**
      * Set Boot Info Table (only allowed for no-emulation images)
      *
      * @param genBootInfoTable Whether to generate a boot info table
@@ -120,19 +128,18 @@ public class ElToritoConfig extends BootConfig {
     }
 
     /**
-     * Generate Boot Info Table
+     * Returns active Platform Identifier
      *
-     * @return Whether a boot info table is to be generated
+     * @return Platform Identifier
      */
-    public boolean getGenBootInfoTable() {
-        return this.genBootInfoTable;
+    public int getPlatformID() {
+        return platformID;
     }
 
     /**
      * Set Platform Identifier
      *
      * @param platformID Platform Identifier: one of PLATFORM_ID_*
-     *
      * @throws ConfigException Invalid Platform Identifier
      */
     public void setPlatformID(int platformID) throws ConfigException {
@@ -144,19 +151,18 @@ public class ElToritoConfig extends BootConfig {
     }
 
     /**
-     * Returns active Platform Identifier
+     * Returns active Identifier String
      *
-     * @return Platform Identifier
+     * @return Active Identifier String
      */
-    public int getPlatformID() {
-        return platformID;
+    public String getIDString() {
+        return idString;
     }
 
     /**
      * Set Identifier String
      *
      * @param idString Identifier String
-     *
      * @throws ConfigException String too long
      */
     public void setIDString(String idString) throws ConfigException {
@@ -164,15 +170,6 @@ public class ElToritoConfig extends BootConfig {
             throw new ConfigException(this, "The ID string may be no longer than 24 characters.");
         }
         this.idString = idString;
-    }
-
-    /**
-     * Returns active Identifier String
-     *
-     * @return Active Identifier String
-     */
-    public String getIDString() {
-        return idString;
     }
 
     /**
@@ -188,7 +185,6 @@ public class ElToritoConfig extends BootConfig {
      * Set Emulation Mode
      *
      * @param bootMediaType Boot Media Type: one of BOOT_MEDIA_TYPE_*
-     *
      * @throws ConfigException Invalid Boot Media Type
      */
     public void setEmulation(int bootMediaType) throws ConfigException {
@@ -251,5 +247,5 @@ public class ElToritoConfig extends BootConfig {
      */
     public void setSystemType(int systemType) {
         this.systemType = systemType;
-	}
+    }
 }

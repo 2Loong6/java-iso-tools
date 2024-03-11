@@ -19,34 +19,22 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.StreamHandler;
+import com.github.stephenc.javaisotools.sabre.*;
 import com.github.stephenc.javaisotools.sabre.impl.FileFixup;
-import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.Fixup;
+
+import java.io.*;
 
 public class ISOImageFileHandler implements StreamHandler {
 
-    private File file = null;
-    private RandomAccessFile raFile = null;
-    private DataOutputStream dataOutputStream = null;
+    private final File file;
+    private final RandomAccessFile raFile;
+    private final DataOutputStream dataOutputStream;
     private long position = 0;
 
     /**
      * ISO Image File Handler
      *
      * @param file ISO image output file
-     *
      * @throws FileNotFoundException File not found
      */
     public ISOImageFileHandler(File file) throws FileNotFoundException {
@@ -64,19 +52,17 @@ public class ISOImageFileHandler implements StreamHandler {
     }
 
     public void data(DataReference reference) throws HandlerException {
-        InputStream inputStream = null;
-        byte[] buffer = null;
-        int bytesToRead = 0;
-        int bytesHandled = 0;
+        byte[] buffer;
+        int bytesToRead;
+        int bytesHandled;
         int bufferLength = 65535;
-        long lengthToWrite = 0;
-        long length = 0;
+        long lengthToWrite;
+        long length;
 
-        try {
+        try (InputStream inputStream = reference.createInputStream()) {
             buffer = new byte[bufferLength];
             length = reference.getLength();
             lengthToWrite = length;
-            inputStream = reference.createInputStream();
             while (lengthToWrite > 0) {
                 if (lengthToWrite > bufferLength) {
                     bytesToRead = bufferLength;
@@ -96,19 +82,11 @@ public class ISOImageFileHandler implements StreamHandler {
             dataOutputStream.flush();
         } catch (IOException e) {
             throw new HandlerException(e);
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                    inputStream = null;
-                }
-            } catch (IOException e) {
-            }
         }
     }
 
     public Fixup fixup(DataReference reference) throws HandlerException {
-        Fixup fixup = null;
+        Fixup fixup;
         fixup = new FileFixup(raFile, position, reference.getLength());
         data(reference);
         return fixup;
@@ -124,7 +102,7 @@ public class ISOImageFileHandler implements StreamHandler {
 
     public void endDocument() throws HandlerException {
         try {
-        	this.raFile.close();
+            this.raFile.close();
             this.dataOutputStream.close();
         } catch (IOException e) {
             throw new HandlerException(e);

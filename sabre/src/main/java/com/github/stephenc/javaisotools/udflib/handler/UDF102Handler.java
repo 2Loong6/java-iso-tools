@@ -19,43 +19,20 @@
 
 package com.github.stephenc.javaisotools.udflib.handler;
 
+import com.github.stephenc.javaisotools.sabre.*;
+import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
+import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
+import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
+import com.github.stephenc.javaisotools.udflib.SabreUDFElement;
+import com.github.stephenc.javaisotools.udflib.structures.*;
+import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
+import com.github.stephenc.javaisotools.udflib.tools.Permissions;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Stack;
-
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
-import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
-import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
-import com.github.stephenc.javaisotools.udflib.SabreUDFElement;
-import com.github.stephenc.javaisotools.udflib.structures.AnchorVolumeDescriptorPointer;
-import com.github.stephenc.javaisotools.udflib.structures.EntityID;
-import com.github.stephenc.javaisotools.udflib.structures.Extend_ad;
-import com.github.stephenc.javaisotools.udflib.structures.ExtendedFileEntry;
-import com.github.stephenc.javaisotools.udflib.structures.FileEntry;
-import com.github.stephenc.javaisotools.udflib.structures.FileIdentifierDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.FileSetDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.ImplementationUseVolumeDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.LogicalVolumeDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.LogicalVolumeIntegrityDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.Long_ad;
-import com.github.stephenc.javaisotools.udflib.structures.PartitionMapType2;
-import com.github.stephenc.javaisotools.udflib.structures.Short_ad;
-import com.github.stephenc.javaisotools.udflib.structures.TerminatingDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.Timestamp;
-import com.github.stephenc.javaisotools.udflib.structures.UnallocatedSpaceDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.VolumeRecognitionSequence;
-import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
-import com.github.stephenc.javaisotools.udflib.tools.Permissions;
-import com.github.stephenc.javaisotools.udflib.structures.PartitionDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.PartitionMapType1;
-import com.github.stephenc.javaisotools.udflib.structures.PrimaryVolumeDescriptor;
-import com.github.stephenc.javaisotools.sabre.ContentHandler;
-import com.github.stephenc.javaisotools.sabre.StructureHandler;
 
 public class UDF102Handler extends ChainingStreamHandler {
 
@@ -202,16 +179,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -286,16 +260,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -318,8 +289,7 @@ public class UDF102Handler extends ChainingStreamHandler {
             myPrimaryVolumeDescriptor.setVolumeSetIdentifier(volumeSetIdentifier);
             myPrimaryVolumeDescriptor.ApplicationIdentifier.setIdentifier(applicationIdentifier);
             myPrimaryVolumeDescriptor.ImplementationIdentifier.setIdentifier(applicationIdentifier);
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 
@@ -391,16 +361,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -414,8 +381,7 @@ public class UDF102Handler extends ChainingStreamHandler {
         try {
             myPartitionDescriptor.PartitionContents.setIdentifier("+NSR02");
             myPartitionDescriptor.ImplementationIdentifier.setIdentifier(applicationIdentifier);
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 
@@ -528,16 +494,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -586,8 +549,7 @@ public class UDF102Handler extends ChainingStreamHandler {
                 myLogicalVolumeDescriptor.NumberofPartitionMaps = 1;
                 myLogicalVolumeDescriptor.PartitionMaps = myPartitionMapType1Bytes;
             }
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 
@@ -643,16 +605,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -724,16 +683,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -747,8 +703,7 @@ public class UDF102Handler extends ChainingStreamHandler {
             myImplementationUseVolumeDescriptor.ImplementationIdentifier.setIdentifier("*UDF LV Info");
             myImplementationUseVolumeDescriptor.ImplementationUse.ImplementationID.setIdentifier(applicationIdentifier);
             myImplementationUseVolumeDescriptor.ImplementationUse.setLogicalVolumeIdentifier(imageIdentifier);
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 
@@ -785,16 +740,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -892,16 +844,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -924,8 +873,7 @@ public class UDF102Handler extends ChainingStreamHandler {
         try {
             implementationId.setIdentifier(applicationIdentifier);
             implementationId.IdentifierSuffix = applicationIdentifierSuffix;
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 
@@ -986,16 +934,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -1019,8 +964,7 @@ public class UDF102Handler extends ChainingStreamHandler {
 
         try {
             myFilesetDescriptor.DomainIdentifier.setIdentifier("*OSTA UDF Compliant");
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 
@@ -1114,16 +1058,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -1154,8 +1095,7 @@ public class UDF102Handler extends ChainingStreamHandler {
 
         try {
             myFileEntry.ImplementationIdentifier.setIdentifier(applicationIdentifier);
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 
@@ -1199,16 +1139,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             }
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -1392,8 +1329,7 @@ public class UDF102Handler extends ChainingStreamHandler {
 
                 try {
                     childFileIdentifierDescriptor.setFileIdentifier(childFileIdentifier);
-                }
-                catch (Exception myException) {
+                } catch (Exception myException) {
                     throw new HandlerException(myException);
                 }
 
@@ -1404,16 +1340,13 @@ public class UDF102Handler extends ChainingStreamHandler {
 
                 childFileIdentifierDescriptors.add(childFileIdentifierDescriptor);
             }
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -1529,16 +1462,13 @@ public class UDF102Handler extends ChainingStreamHandler {
             dataReferenceStack.pop();
             dataReferenceStack.pop();
             dataReferenceStack.pop();
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }

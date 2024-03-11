@@ -33,15 +33,6 @@ public class PartitionConfig {
     }
 
     /**
-     * System Identifier
-     *
-     * @param systemId System identifier string
-     */
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
-
-    /**
      * Active System Identifier
      *
      * @return System identifier string
@@ -51,12 +42,12 @@ public class PartitionConfig {
     }
 
     /**
-     * Volume Partition Identifier
+     * System Identifier
      *
-     * @param volumePartitionId Active Volume Partition identifier string
+     * @param systemId System identifier string
      */
-    public void setVolumePartitionId(String volumePartitionId) {
-        this.volumePartitionId = volumePartitionId;
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
     }
 
     /**
@@ -66,5 +57,14 @@ public class PartitionConfig {
      */
     public String getVolumePartitionId() {
         return volumePartitionId;
+    }
+
+    /**
+     * Volume Partition Identifier
+     *
+     * @param volumePartitionId Active Volume Partition identifier string
+     */
+    public void setVolumePartitionId(String volumePartitionId) {
+        this.volumePartitionId = volumePartitionId;
     }
 }

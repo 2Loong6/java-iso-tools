@@ -19,11 +19,11 @@
 
 package com.github.stephenc.javaisotools.udflib.structures;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
 import com.github.stephenc.javaisotools.udflib.tools.Checksum;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class LogicalVolumeIntegrityDescriptor {
 

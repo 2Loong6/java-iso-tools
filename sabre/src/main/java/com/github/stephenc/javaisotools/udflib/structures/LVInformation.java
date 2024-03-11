@@ -19,10 +19,10 @@
 
 package com.github.stephenc.javaisotools.udflib.structures;
 
+import com.github.stephenc.javaisotools.udflib.tools.OSTAUnicode;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import com.github.stephenc.javaisotools.udflib.tools.OSTAUnicode;
 
 public class LVInformation {
 
@@ -64,8 +64,7 @@ public class LVInformation {
             System.arraycopy(tmpIdentifier, 0, LogicalVolumeIdentifier, 0, length);
 
             LogicalVolumeIdentifier[LogicalVolumeIdentifier.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void setLVInfo1(String lvInfo)
@@ -88,8 +87,7 @@ public class LVInformation {
             System.arraycopy(tmpIdentifier, 0, LVInfo1, 0, length);
 
             LogicalVolumeIdentifier[LVInfo1.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void setLVInfo2(String lvInfo)
@@ -112,8 +110,7 @@ public class LVInformation {
             System.arraycopy(tmpIdentifier, 0, LVInfo2, 0, length);
 
             LogicalVolumeIdentifier[LVInfo2.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void setLVInfo3(String lvInfo)
@@ -136,8 +133,7 @@ public class LVInformation {
             System.arraycopy(tmpIdentifier, 0, LVInfo3, 0, length);
 
             LogicalVolumeIdentifier[LVInfo3.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void read(RandomAccessFile myRandomAccessFile)

@@ -19,8 +19,11 @@
 
 package com.github.stephenc.javaisotools.iso9660;
 
+import java.io.Serial;
+
 public class ConfigException extends Exception {
 
+    @Serial
     private static final long serialVersionUID = -6845620304573548666L;
 
     public ConfigException(Object config, String string) {

@@ -19,19 +19,19 @@
 
 package com.github.stephenc.javaisotools.eltorito.impl;
 
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.EmptyByteArrayDataReference;
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFShortDataReference;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFWordDataReference;
+import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.Fixup;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.EmptyByteArrayDataReference;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFWordDataReference;
-import com.github.stephenc.javaisotools.sabre.DataReference;
 
 public class ElToritoFactory {
 
-    private StreamHandler streamHandler;
+    private final StreamHandler streamHandler;
 
     public ElToritoFactory(StreamHandler streamHandler) {
         this.streamHandler = streamHandler;
@@ -183,9 +183,7 @@ public class ElToritoFactory {
 
         byte[] bytes = new byte[pad];
         byte[] original = string.getBytes();
-        for (int i = 0; i < original.length; i++) {
-            bytes[i] = original[i];
-        }
+        System.arraycopy(original, 0, bytes, 0, original.length);
         for (int i = original.length; i < bytes.length; i++) {
             bytes[i] = 0;
         }

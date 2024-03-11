@@ -19,61 +19,44 @@
 
 package com.github.stephenc.javaisotools.udflib;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-
 import com.github.stephenc.javaisotools.udflib.structures.ExtendedFileEntry;
 import com.github.stephenc.javaisotools.udflib.structures.FileEntry;
 import com.github.stephenc.javaisotools.udflib.structures.FileIdentifierDescriptor;
 import com.github.stephenc.javaisotools.udflib.tools.UniqueIdDisposer;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 public class UDFLayoutInformation {
 
-    private UniqueIdDisposer myUniqueIdDisposer;
-
     public int blockSize;
-
     public int metadataAllocationUnitSize;
     public int metadataAlignmentUnitSize;
-
     public long fileCount;
     public long directoryCount;
-
     public long AVDP1Block;                                // anchor volume descriptor sequence pointer 1
     public long AVDP2Block;                                // anchor volume descriptor sequence pointer 2
-
     public long MVDSStartingBlock;                        // main volume descriptor sequence start
     public long MVDSEndingBlock;                        // main volume descriptor sequence end
-
     public long RVDSStartingBlock;                        // reserve volume descriptor sequence start
     public long RVDSEndingBlock;                        // reserve volume descriptor sequence end
-
     public long LVIDSStartingBlock;                        // logical volume integrity sequence start
     public long LVIDSEndingBlock;                        // logical volume integrity sequence end
-
     public long physicalPartitionStartingBlock;
     public long physicalPartitionEndingBlock;
-
     public long metadataPartitionStartingBlock;
     public long metadataPartitionEndingBlock;
-
     public long mainMetadataFileBlock;
     public long mainMetadataFileLocation;
-
     public long mirrorMetadataFileBlock;
     public long mirrorMetadataFileLocation;
-
     public long metadataEmptyArea;
-
     public int partitionToStoreMetadataOn;
-
     public long FSDBlock;        // fileset descriptor location
     public long FSDLocation;    // fileset descriptor location inside the partition
-
     public long rootFEBlock;    // root directory file entry location
     public long rootFELocation;    // root directory file entry location inside the partition
-
     public long PVD1Block;        // primary volume descriptor location (main volume descriptor sequence)
     public long PVD2Block;        // primary volume descriptor location (reserve volume descriptor sequence)
     public long PD1Block;        // partition descriptor location (main volume descriptor sequence)
@@ -86,24 +69,13 @@ public class UDFLayoutInformation {
     public long IUVD2Block;        // implementation use volume descriptor location (reserve volume descriptor sequence)
     public long TD1Block;        // terminating descriptor location (main volume descriptor sequence)
     public long TD2Block;        // terminating descriptor location (reserve volume descriptor sequence)
-
     public long[] sizeTable;        // partition size information
     public long[] freespaceTable;    // partition freespace information
-
     public long nextUniqueId;
-
-    public class FileEntryPosition {
-
-        long entryBlock;        // location of the (extended-) file entry itself
-        long entryLocation;    // location of the (extended-) file entry itself inside the partition
-        long dataBlock;        // location of the file data if not embedded inline
-        long dataLocation;    // location of the file data if not embedded inline inside the partition
-    }
-
     public Hashtable<UDFImageBuilderFile, FileEntryPosition> fileEntryPositions;
     public ArrayList<UDFImageBuilderFile> linearUDFImageBuilderFileOrdering;
     public Hashtable<UDFImageBuilderFile, Long> uniqueIds;
-
+    private UniqueIdDisposer myUniqueIdDisposer;
     public UDFLayoutInformation(UDFImageBuilderFile rootUDFImageBuilderFile, UDFRevision myUDFRevision, int blockSize)
             throws Exception {
         myUniqueIdDisposer = new UniqueIdDisposer();
@@ -307,6 +279,14 @@ public class UDFLayoutInformation {
         fileEntryPositions.put(currentUDFImageBuilderFile, currentFileEntryPosition);
 
         return currentBlock;
+    }
+
+    public class FileEntryPosition {
+
+        long entryBlock;        // location of the (extended-) file entry itself
+        long entryLocation;    // location of the (extended-) file entry itself inside the partition
+        long dataBlock;        // location of the file data if not embedded inline
+        long dataLocation;    // location of the file data if not embedded inline inside the partition
     }
 
 }

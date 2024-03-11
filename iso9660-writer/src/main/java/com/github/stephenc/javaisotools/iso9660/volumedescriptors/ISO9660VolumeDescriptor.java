@@ -21,9 +21,9 @@ package com.github.stephenc.javaisotools.iso9660.volumedescriptors;
 
 import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Constants;
+import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
-import com.github.stephenc.javaisotools.sabre.StreamHandler;
 
 public abstract class ISO9660VolumeDescriptor {
 

@@ -19,17 +19,16 @@
 
 package com.github.stephenc.javaisotools.iso9660.volumedescriptors;
 
-import java.nio.ByteBuffer;
-import java.util.Date;
-import java.util.HashMap;
-
 import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
 import com.github.stephenc.javaisotools.iso9660.StandardConfig;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Constants;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660DateDataReference;
+import com.github.stephenc.javaisotools.iso9660.impl.ISO9660DirectoryRecord;
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothShortDataReference;
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.EmptyByteArrayDataReference;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFWordDataReference;
 import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.Fixup;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
@@ -37,9 +36,10 @@ import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
-import com.github.stephenc.javaisotools.iso9660.impl.ISO9660DirectoryRecord;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.EmptyByteArrayDataReference;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFWordDataReference;
+
+import java.nio.ByteBuffer;
+import java.util.Date;
+import java.util.HashMap;
 
 public abstract class StandardVolumeDescriptor extends ISO9660VolumeDescriptor {
 
@@ -116,10 +116,6 @@ public abstract class StandardVolumeDescriptor extends ISO9660VolumeDescriptor {
         this.publisher = publisher;
     }
 
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
-
     public void setVolSeqNo(int volSeqNo) {
         this.volSeqNo = volSeqNo;
     }
@@ -130,10 +126,6 @@ public abstract class StandardVolumeDescriptor extends ISO9660VolumeDescriptor {
 
     public void setVolSetSize(int volSetSize) {
         this.volSetSize = volSetSize;
-    }
-
-    public void setVolumeId(String volumeId) {
-        this.volumeId = volumeId;
     }
 
     HashMap doStandardVD() throws HandlerException {
@@ -260,10 +252,18 @@ public abstract class StandardVolumeDescriptor extends ISO9660VolumeDescriptor {
         return new ByteArrayDataReference(bytes);
     }
 
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
     private ByteArrayDataReference getVolumeId()
             throws HandlerException {
         byte[] bytes = helper.pad(volumeId, 32);
         return new ByteArrayDataReference(bytes);
+    }
+
+    public void setVolumeId(String volumeId) {
+        this.volumeId = volumeId;
     }
 
     private BothShortDataReference getVolumeSetSize() {
@@ -296,10 +296,9 @@ public abstract class StandardVolumeDescriptor extends ISO9660VolumeDescriptor {
         } else if (object instanceof String) {
             id = (String) object;
             bytes = helper.pad(id, 128);
-        } else if (object instanceof ISO9660File) {
+        } else if (object instanceof ISO9660File file) {
             ByteBuffer buf = ByteBuffer.allocate(128);
             buf.put((byte) 0x5F);
-            ISO9660File file = (ISO9660File) object;
             file.enforce8plus3(true);
             id = helper.getFilenameDataReference(file).getName();
             buf.put(helper.pad(id, 127));
@@ -319,12 +318,11 @@ public abstract class StandardVolumeDescriptor extends ISO9660VolumeDescriptor {
 
         if (file == null) {
             id = "";
-            bytes = helper.pad(id, 37);
         } else {
             file.enforce8plus3(true);
             id = helper.getFilenameDataReference(file).getName();
-            bytes = helper.pad(id, 37);
         }
+        bytes = helper.pad(id, 37);
 
         return new ByteArrayDataReference(bytes);
     }

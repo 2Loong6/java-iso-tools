@@ -19,15 +19,15 @@
 
 package com.github.stephenc.javaisotools.sabre.impl;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-
 import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.Fixup;
 import com.github.stephenc.javaisotools.sabre.FixupListener;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 
 public class FileFixup implements Fixup {
 

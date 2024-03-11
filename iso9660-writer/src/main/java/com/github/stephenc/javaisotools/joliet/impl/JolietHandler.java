@@ -19,36 +19,32 @@
 
 package com.github.stephenc.javaisotools.joliet.impl;
 
-import java.util.HashMap;
-
 import com.github.stephenc.javaisotools.iso9660.ISO9660RootDirectory;
+import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
 import com.github.stephenc.javaisotools.iso9660.StandardHandler;
-import com.github.stephenc.javaisotools.iso9660.impl.FileElement;
+import com.github.stephenc.javaisotools.iso9660.impl.*;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
 import com.github.stephenc.javaisotools.iso9660.volumedescriptors.SupplementaryVolumeDescriptor;
 import com.github.stephenc.javaisotools.sabre.Element;
 import com.github.stephenc.javaisotools.sabre.Fixup;
+import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
-import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
-import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Constants;
-import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Element;
-import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Factory;
-import com.github.stephenc.javaisotools.iso9660.impl.LogicalSectorElement;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
+
+import java.util.HashMap;
 
 public class JolietHandler extends StandardHandler {
 
-    private JolietConfig config;
-    private LayoutHelper helper;
-    private HashMap volumeFixups;
-    private ISO9660Factory factory;
+    private final JolietConfig config;
+    private final LayoutHelper helper;
+    private final HashMap volumeFixups;
+    private final ISO9660Factory factory;
 
     public JolietHandler(StreamHandler streamHandler, ISO9660RootDirectory root, JolietConfig config)
             throws HandlerException {
         super(streamHandler, root, config);
         this.config = config;
-        this.volumeFixups = new HashMap();
+        this.volumeFixups = new HashMap<>();
 
         checkMetadataFiles();
 
@@ -64,21 +60,20 @@ public class JolietHandler extends StandardHandler {
         if (element instanceof ISO9660Element) {
             String id = (String) element.getId();
             process(id);
-        } else if (element instanceof FileElement) {
-            FileElement fileElement = (FileElement) element;
+        } else if (element instanceof FileElement fileElement) {
             factory.doFileFixup(fileElement.getFile());
         }
         super.startElement(element);
     }
 
     private void process(String id) throws HandlerException {
-        if (id.equals("VDS")) {
-            doSVD();
-        } else if (id.equals("PTA")) {
-            factory.doPT(ISO9660Constants.TYPE_L_PT);
-            factory.doPT(ISO9660Constants.TYPE_M_PT);
-        } else if (id.equals("DRA")) {
-            factory.doDRA();
+        switch (id) {
+            case "VDS" -> doSVD();
+            case "PTA" -> {
+                factory.doPT(ISO9660Constants.TYPE_L_PT);
+                factory.doPT(ISO9660Constants.TYPE_M_PT);
+            }
+            case "DRA" -> factory.doDRA();
         }
     }
 

@@ -19,11 +19,11 @@
 
 package com.github.stephenc.javaisotools.rockridge.impl;
 
-import java.util.Vector;
-
-import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
+import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.NamingConventions;
+
+import java.util.Vector;
 
 public class RockRidgeNamingConventions extends NamingConventions {
 
@@ -54,7 +54,7 @@ public class RockRidgeNamingConventions extends NamingConventions {
         String extension = normalize(file.getExtension());
         int length = filename.length() + extension.length();
 
-        if (extension.length() == 0) {
+        if (extension.isEmpty()) {
             if (length > MAX_FILENAME_LENGTH) {
                 // Shorten filename
                 filename = filename.substring(0, MAX_FILENAME_LENGTH);

@@ -19,35 +19,15 @@
 
 package com.github.stephenc.javaisotools.udflib;
 
+import com.github.stephenc.javaisotools.udflib.structures.*;
+import com.github.stephenc.javaisotools.udflib.tools.Permissions;
+import com.github.stephenc.javaisotools.udflib.tools.UniqueIdDisposer;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import com.github.stephenc.javaisotools.udflib.structures.AnchorVolumeDescriptorPointer;
-import com.github.stephenc.javaisotools.udflib.structures.Extend_ad;
-import com.github.stephenc.javaisotools.udflib.structures.ExtendedFileEntry;
-import com.github.stephenc.javaisotools.udflib.structures.FileEntry;
-import com.github.stephenc.javaisotools.udflib.structures.FileIdentifierDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.FileSetDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.ImplementationUseVolumeDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.LogicalVolumeDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.LogicalVolumeIntegrityDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.Long_ad;
-import com.github.stephenc.javaisotools.udflib.structures.PartitionDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.ReservedArea;
-import com.github.stephenc.javaisotools.udflib.structures.Short_ad;
-import com.github.stephenc.javaisotools.udflib.structures.TerminatingDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.Timestamp;
-import com.github.stephenc.javaisotools.udflib.structures.UnallocatedSpaceDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.VolumeRecognitionSequence;
-import com.github.stephenc.javaisotools.udflib.tools.Permissions;
-import com.github.stephenc.javaisotools.udflib.tools.UniqueIdDisposer;
-import com.github.stephenc.javaisotools.udflib.structures.EntityID;
-import com.github.stephenc.javaisotools.udflib.structures.PartitionMapType1;
-import com.github.stephenc.javaisotools.udflib.structures.PartitionMapType2;
-import com.github.stephenc.javaisotools.udflib.structures.PrimaryVolumeDescriptor;
 
 public class UDFImageBuilder {
 
@@ -100,8 +80,8 @@ public class UDFImageBuilder {
     private void writeImageV102(String filename)
             throws Exception {
         /*
-           *	fixed prerequisites
-           */
+         *	fixed prerequisites
+         */
         int serialNumberForTags =
                 1;    // all tag serial numbers should be equal to the avdp descriptor tag serial number
         int descriptorVersion = 2;
@@ -162,8 +142,8 @@ public class UDFImageBuilder {
         long partitionEndingBlock = nextFreeBlock;
 
         /*
-           *	set location for anchor volume descriptor pointers, main and reserver volume descriptor sequence
-           */
+         *	set location for anchor volume descriptor pointers, main and reserver volume descriptor sequence
+         */
         long AVDP1Block = 256;
         long AVDP2Block = partitionEndingBlock + 16;
         long MVDSBlock = 257;
@@ -176,8 +156,8 @@ public class UDFImageBuilder {
                 descriptorVersion);
 
         /*
-           * 	set locations for volume descriptor sequence items
-           */
+         * 	set locations for volume descriptor sequence items
+         */
         long PVD1Block = MVDSBlock;        // primary volume descriptor location (main volume descriptor sequence)
         long PVD2Block = RVDSBlock;        // primary volume descriptor location (reserve volume descriptor sequence)
         long PD1Block = MVDSBlock + 1;    // partition descriptor location (main volume descriptor sequence)
@@ -228,8 +208,8 @@ public class UDFImageBuilder {
         writeTerminatingDescriptor(myRandomAccessFile, TD2Block, serialNumberForTags, descriptorVersion);
 
         /*
-           * 	write LVIDS
-           */
+         * 	write LVIDS
+         */
         int currentLVIDSBlock = LVIDSequenceStartingBlock;
 
         //write LVID
@@ -252,8 +232,8 @@ public class UDFImageBuilder {
     private void writeImageV201(String filename)
             throws Exception {
         /*
-           *	fixed prerequisites
-           */
+         *	fixed prerequisites
+         */
         int serialNumberForTags =
                 1;    // all tag serial numbers should be equal to the avdp descriptor tag serial number
         int descriptorVersion = 3;
@@ -314,8 +294,8 @@ public class UDFImageBuilder {
         long partitionEndingBlock = nextFreeBlock;
 
         /*
-           *	set location for anchor volume descriptor pointers, main and reserver volume descriptor sequence
-           */
+         *	set location for anchor volume descriptor pointers, main and reserver volume descriptor sequence
+         */
         long AVDP1Block = 256;
         long AVDP2Block = partitionEndingBlock + 16;
         long MVDSBlock = 257;
@@ -328,8 +308,8 @@ public class UDFImageBuilder {
                 descriptorVersion);
 
         /*
-           * 	set locations for volume descriptor sequence items
-           */
+         * 	set locations for volume descriptor sequence items
+         */
         long PVD1Block = MVDSBlock;        // primary volume descriptor location (main volume descriptor sequence)
         long PVD2Block = RVDSBlock;        // primary volume descriptor location (reserve volume descriptor sequence)
         long PD1Block = MVDSBlock + 1;    // partition descriptor location (main volume descriptor sequence)
@@ -380,8 +360,8 @@ public class UDFImageBuilder {
         writeTerminatingDescriptor(myRandomAccessFile, TD2Block, serialNumberForTags, descriptorVersion);
 
         /*
-           * 	write LVIDS
-           */
+         * 	write LVIDS
+         */
         int currentLVIDSBlock = LVIDSequenceStartingBlock;
 
         //write LVID
@@ -404,8 +384,8 @@ public class UDFImageBuilder {
     private void writeImageV260(String filename)
             throws Exception {
         /*
-           *	fixed prerequisites
-           */
+         *	fixed prerequisites
+         */
         int serialNumberForTags =
                 1;    // all tag serial numbers should be equal to the avdp descriptor tag serial number
         int descriptorVersion = 3;
@@ -528,8 +508,8 @@ public class UDFImageBuilder {
         long partitionEndingBlock = mirrorMetadataFileBlock + 1;
 
         /*
-           *	set location for anchor volume descriptor pointers, main and reserver volume descriptor sequence
-           */
+         *	set location for anchor volume descriptor pointers, main and reserver volume descriptor sequence
+         */
         long AVDP1Block = 256;
         long AVDP2Block = partitionEndingBlock + 16;
         long MVDSBlock = 257;
@@ -542,8 +522,8 @@ public class UDFImageBuilder {
                 descriptorVersion);
 
         /*
-           * 	set locations for volume descriptor sequence items
-           */
+         * 	set locations for volume descriptor sequence items
+         */
         long PVD1Block = MVDSBlock;        // primary volume descriptor location (main volume descriptor sequence)
         long PVD2Block = RVDSBlock;        // primary volume descriptor location (reserve volume descriptor sequence)
         long PD1Block = MVDSBlock + 1;    // partition descriptor location (main volume descriptor sequence)
@@ -600,8 +580,8 @@ public class UDFImageBuilder {
         writeTerminatingDescriptor(myRandomAccessFile, TD2Block, serialNumberForTags, descriptorVersion);
 
         /*
-           * 	write LVIDS
-           */
+         * 	write LVIDS
+         */
         int currentLVIDSBlock = LVIDSequenceStartingBlock;
 
         //write LVID
@@ -671,8 +651,8 @@ public class UDFImageBuilder {
         long nextFreeBlock = currentBlock + 1;
 
         /*
-           *	if file is a directory
-           */
+         *	if file is a directory
+         */
         if (currentUDFImageBuilderFile.getFileType() == UDFImageBuilderFile.FileType.Directory) {
             myFileEntry.ICBTag.FileType = 4;    // directory
 
@@ -819,8 +799,8 @@ public class UDFImageBuilder {
         }
 
         /*
-           *	if file is a "normal" file
-           */
+         *	if file is a "normal" file
+         */
         else if (currentUDFImageBuilderFile.getFileType() == UDFImageBuilderFile.FileType.File) {
             myFileEntry.ICBTag.FileType = 5;    // normal file
 
@@ -953,8 +933,8 @@ public class UDFImageBuilder {
         nextFreeBlocks[1] = currentFiledataBlock;
 
         /*
-           *	if file is a directory
-           */
+         *	if file is a directory
+         */
         if (currentUDFImageBuilderFile.getFileType() == UDFImageBuilderFile.FileType.Directory) {
             myExtendedFileEntry.ICBTag.FileType = 4;    // directory
 
@@ -1103,8 +1083,8 @@ public class UDFImageBuilder {
         }
 
         /*
-           *	if file is a "normal" file
-           */
+         *	if file is a "normal" file
+         */
         else if (currentUDFImageBuilderFile.getFileType() == UDFImageBuilderFile.FileType.File) {
             myExtendedFileEntry.ICBTag.FileType = 5;    // normal file
 

@@ -19,15 +19,16 @@
 
 package com.github.stephenc.javaisotools.rockridge.impl;
 
-import java.util.HashMap;
-
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.EmptyByteArrayDataReference;
 import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
 import com.github.stephenc.javaisotools.sabre.Fixup;
+import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SUSPFactory {
 
@@ -39,7 +40,7 @@ public class SUSPFactory {
     }
 
     public HashMap doCEEntry() throws HandlerException {
-        HashMap memory = new HashMap();
+        HashMap memory = new HashMap<>();
         streamHandler.startElement(new SystemUseEntryElement("CE", 1));
 
         Fixup ceLocationFixup = streamHandler.fixup(new BothWordDataReference(0));

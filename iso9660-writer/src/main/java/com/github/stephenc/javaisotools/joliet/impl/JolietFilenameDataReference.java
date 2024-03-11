@@ -19,14 +19,15 @@
 
 package com.github.stephenc.javaisotools.joliet.impl;
 
+import com.github.stephenc.javaisotools.iso9660.FilenameDataReference;
+import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
+import com.github.stephenc.javaisotools.iso9660.ISO9660File;
+import com.github.stephenc.javaisotools.sabre.HandlerException;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
-import com.github.stephenc.javaisotools.iso9660.FilenameDataReference;
-import com.github.stephenc.javaisotools.iso9660.ISO9660File;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
+import java.nio.charset.StandardCharsets;
 
 public class JolietFilenameDataReference extends FilenameDataReference {
 
@@ -39,10 +40,10 @@ public class JolietFilenameDataReference extends FilenameDataReference {
     }
 
     public long getLength() {
-        return getName().length() * 2;
+        return getName().length() * 2L;
     }
 
     public InputStream createInputStream() throws IOException {
-        return new ByteArrayInputStream(getName().getBytes("UTF-16BE")); // UCS-2
+        return new ByteArrayInputStream(getName().getBytes(StandardCharsets.UTF_16BE)); // UCS-2
     }
 }

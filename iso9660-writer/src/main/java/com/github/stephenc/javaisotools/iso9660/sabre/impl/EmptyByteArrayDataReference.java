@@ -19,15 +19,15 @@
 
 package com.github.stephenc.javaisotools.iso9660.sabre.impl;
 
+import com.github.stephenc.javaisotools.sabre.DataReference;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.github.stephenc.javaisotools.sabre.DataReference;
-
 public class EmptyByteArrayDataReference implements DataReference {
 
-    private int length = 0;
+    private final int length;
 
     public EmptyByteArrayDataReference(int length) {
         this.length = length;
@@ -38,7 +38,7 @@ public class EmptyByteArrayDataReference implements DataReference {
     }
 
     public InputStream createInputStream() throws IOException {
-        byte[] buffer = null;
+        byte[] buffer;
 
         buffer = new byte[length];
         for (int i = 0; i < length; i++) {

@@ -19,11 +19,11 @@
 
 package com.github.stephenc.javaisotools.udflib.structures;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
 import com.github.stephenc.javaisotools.udflib.tools.OSTAUnicode;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class PrimaryVolumeDescriptor extends VolumeDescriptorSequenceItem {
 
@@ -92,8 +92,7 @@ public class PrimaryVolumeDescriptor extends VolumeDescriptorSequenceItem {
             System.arraycopy(tmpIdentifier, 0, VolumeIdentifier, 0, length);
 
             VolumeIdentifier[VolumeIdentifier.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void setVolumeSetIdentifier(String volumeSetIdentifier)
@@ -116,8 +115,7 @@ public class PrimaryVolumeDescriptor extends VolumeDescriptorSequenceItem {
             System.arraycopy(tmpIdentifier, 0, VolumeSetIdentifier, 0, length);
 
             VolumeSetIdentifier[VolumeSetIdentifier.length - 1] = (byte) length;
-        }
-        catch (Exception ex) { /* never happens */ }
+        } catch (Exception ex) { /* never happens */ }
     }
 
     public void read(RandomAccessFile myRandomAccessFile)

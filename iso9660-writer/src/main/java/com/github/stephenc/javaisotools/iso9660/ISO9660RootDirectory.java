@@ -89,9 +89,9 @@ public class ISO9660RootDirectory extends ISO9660Directory {
         clone.setRoot(clone);
 
         // Update Root for subdirectories
-        Iterator it = clone.unsortedIterator();
+        Iterator<ISO9660Directory> it = clone.unsortedIterator();
         while (it.hasNext()) {
-            ISO9660Directory dir = (ISO9660Directory) it.next();
+            ISO9660Directory dir = it.next();
             dir.setRoot(clone);
         }
 

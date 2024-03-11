@@ -39,12 +39,12 @@ public class LimitingInputStream extends FilterInputStream {
         this.limit = limit;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
     public int getLimit() {
         return this.limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
     public int read() throws IOException {

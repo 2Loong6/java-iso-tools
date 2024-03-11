@@ -19,26 +19,21 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
-
-import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
-import com.github.stephenc.javaisotools.iso9660.ISO9660File;
-import com.github.stephenc.javaisotools.iso9660.ISO9660RootDirectory;
-import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
-import com.github.stephenc.javaisotools.iso9660.NamingConventions;
-import com.github.stephenc.javaisotools.iso9660.StandardConfig;
+import com.github.stephenc.javaisotools.iso9660.*;
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.EmptyByteArrayDataReference;
+import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFWordDataReference;
 import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.Fixup;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
-import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.EmptyByteArrayDataReference;
-import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFWordDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
+import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 public class ISO9660Factory {
 
@@ -58,24 +53,24 @@ public class ISO9660Factory {
         this.volumeFixups = volumeFixups;
 
         int dirCount = root.deepDirCount() + 1;
-        this.typeLPTFixups = new HashMap(dirCount);
-        this.typeMPTFixups = new HashMap(dirCount);
-        this.dirFixups = new HashMap(dirCount);
+        this.typeLPTFixups = new HashMap<>(dirCount);
+        this.typeMPTFixups = new HashMap<>(dirCount);
+        this.dirFixups = new HashMap<>(dirCount);
 
         int fileCount = root.deepFileCount() + 1;
-        this.fileFixups = new HashMap(fileCount);
-        this.locationFixups = new HashMap(fileCount);
+        this.fileFixups = new HashMap<>(fileCount);
+        this.locationFixups = new HashMap<>(fileCount);
 
-        this.emptyFileFixups = new Vector();
+        this.emptyFileFixups = new Vector<>();
     }
 
     public void applyNamingConventions() throws HandlerException {
         NamingConventions namingConventions = helper.getNamingConventions();
         namingConventions.processDirectory(root);
 
-        Iterator dit = root.unsortedIterator();
+        Iterator<ISO9660Directory> dit = root.unsortedIterator();
         while (dit.hasNext()) {
-            ISO9660Directory dir = (ISO9660Directory) dit.next();
+            ISO9660Directory dir = dit.next();
             namingConventions.processDirectory(dir);
         }
     }
@@ -88,9 +83,9 @@ public class ISO9660Factory {
     }
 
     private void relocateDirectories(ISO9660Directory dir) {
-        Iterator it = dir.sortedIterator();
+        Iterator<ISO9660Directory> it = dir.sortedIterator();
         while (it.hasNext()) {
-            ISO9660Directory subdir = (ISO9660Directory) it.next();
+            ISO9660Directory subdir = it.next();
             if (subdir.getLevel() == 9) {
                 relocate(subdir);
             }
@@ -124,28 +119,28 @@ public class ISO9660Factory {
             throw new HandlerException("Unknown Path Table Type: " + type);
         }
 
-        HashMap parentMapper = new HashMap();
+        HashMap parentMapper = new HashMap<>();
         ISO9660Directory dir = root;
         int dirNumber = 1;
 
         // Root Directory
         ISO9660PathTableRecord rptr = new ISO9660PathTableRecord(streamHandler, type, ISO9660Constants.FI_ROOT, 1);
         ptFixups.put(root, rptr.doPTR());
-        parentMapper.put(dir, new Integer(dirNumber));
+        parentMapper.put(dir, dirNumber);
 
         // Subdirectories
-        Iterator it = root.sortedIterator();
+        Iterator<ISO9660Directory> it = root.sortedIterator();
         while (it.hasNext()) {
             dirNumber++;
-            dir = (ISO9660Directory) it.next();
+            dir = it.next();
 
             // Retrieve parent directory number and reset filename clash detection if appropriate
-            int parent = ((Integer) parentMapper.get(dir.getParentDirectory())).intValue();
+            int parent = (Integer) parentMapper.get(dir.getParentDirectory());
 
             DataReference ref = helper.getFilenameDataReference(dir);
             ISO9660PathTableRecord ptr = new ISO9660PathTableRecord(streamHandler, type, ref, parent);
             ptFixups.put(dir, ptr.doPTR());
-            parentMapper.put(dir, new Integer(dirNumber));
+            parentMapper.put(dir, dirNumber);
         }
 
         if (volumeFixups.containsKey("ptSizeFixup")) {
@@ -160,17 +155,17 @@ public class ISO9660Factory {
     }
 
     public void doDRA() throws HandlerException {
-        HashMap parentMapper = new HashMap();
+        HashMap parentMapper = new HashMap<>();
 
         // Root Directory
         doDir(root, parentMapper);
         doRootDirFixups(parentMapper);
 
         // Subdirectories
-        ISO9660Directory dir = root;
-        Iterator it = root.sortedIterator();
+        ISO9660Directory dir;
+        Iterator<ISO9660Directory> it = root.sortedIterator();
         while (it.hasNext()) {
-            dir = (ISO9660Directory) it.next();
+            dir = it.next();
             doDir(dir, parentMapper);
         }
     }
@@ -212,22 +207,18 @@ public class ISO9660Factory {
         contents.addAll(dir.getFiles());
         Collections.sort(contents);
 
-        Iterator it = contents.iterator();
-        while (it.hasNext()) {
+        for (Object content : contents) {
             doBlockCheck(position);
-            Object object = it.next();
-            if (object instanceof ISO9660Directory) {
-                ISO9660Directory subdir = (ISO9660Directory) object;
+            if (content instanceof ISO9660Directory subdir) {
                 if (subdir.isMoved() && dir != root.getMovedDirectoriesStore()) {
                     doDRLengthFixup(doFakeDR(subdir));
                 } else {
                     doDRLengthFixup(doDR(subdir));
                 }
-            } else if (object instanceof ISO9660File) {
-                ISO9660File file = (ISO9660File) object;
+            } else if (content instanceof ISO9660File file) {
                 doDRLengthFixup(doDR(file));
             } else {
-                throw new HandlerException("Neither file nor directory: " + object);
+                throw new HandlerException("Neither file nor directory: " + content);
             }
         }
 
@@ -282,7 +273,7 @@ public class ISO9660Factory {
     }
 
     private HashMap doDRLengthFixup(HashMap memory) throws HandlerException {
-        int drLength = ((Integer) memory.get("drLength")).intValue();
+        int drLength = (Integer) memory.get("drLength");
         memory.remove("drLength");
 
         if (drLength % 2 == 1) {
@@ -393,9 +384,9 @@ public class ISO9660Factory {
 
         // Hardlink support for ISO9660Files that have the same underlying File
         if (locationFixups.containsKey(file.getContentID())) {
-            location = ((Integer) locationFixups.get(file.getContentID())).intValue();
+            location = (Integer) locationFixups.get(file.getContentID());
         } else {
-            locationFixups.put(file.getContentID(), new Integer(location));
+            locationFixups.put(file.getContentID(), location);
         }
 
         // Write and close File Fixup
@@ -404,13 +395,12 @@ public class ISO9660Factory {
     }
 
     public void doEmptyFileFixups() throws HandlerException {
-        Iterator it = emptyFileFixups.iterator();
-        while (it.hasNext()) {
+        for (Object emptyFileFixup : emptyFileFixups) {
             streamHandler.startElement(new LogicalSectorElement("DUMMY"));
 
             // Write and close Empty File Fixup
             int location = helper.getCurrentLocation();
-            Fixup locationFixup = (Fixup) it.next();
+            Fixup locationFixup = (Fixup) emptyFileFixup;
             locationFixup.data(new BothWordDataReference(location));
             locationFixup.close();
 
@@ -418,12 +408,12 @@ public class ISO9660Factory {
         }
     }
 
-    class DirFixupPair {
+    static class DirFixupPair {
 
         Fixup location, length;
     }
 
-    class ParentInfo {
+    static class ParentInfo {
 
         int location, length;
     }

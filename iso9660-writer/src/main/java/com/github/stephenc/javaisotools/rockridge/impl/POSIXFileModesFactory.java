@@ -21,26 +21,26 @@ package com.github.stephenc.javaisotools.rockridge.impl;
 
 public class POSIXFileModesFactory {
 
-    public static int USER_READ = 0400;
-    public static int USER_WRITE = 0200;
-    public static int USER_EXEC = 0100;
-    public static int GROUP_READ = 040;
-    public static int GROUP_WRITE = 020;
-    public static int GROUP_EXEC = 010;
-    public static int OTHER_READ = 04;
-    public static int OTHER_WRITE = 02;
-    public static int OTHER_EXEC = 01;
-    public static int SETUID = 04000;
-    public static int SETGID = 02000;
-    public static int ENFORCE_FILE_LOCKING = 02000;
-    public static int SAVE_SWAPPED_AFTER_USE = 01000;
-    public static int SOCKET = 0140000;
-    public static int SYMLINK = 0120000;
-    public static int REGULAR = 0100000;
-    public static int BLOCK_SPECIAL = 060000;
-    public static int CHAR_SPECIAL = 020000;
-    public static int DIRECTORY = 040000;
-    public static int PIPE_FIFO = 010000;
+    public static final int USER_READ = 0400;
+    public static final int USER_WRITE = 0200;
+    public static final int USER_EXEC = 0100;
+    public static final int GROUP_READ = 040;
+    public static final int GROUP_WRITE = 020;
+    public static final int GROUP_EXEC = 010;
+    public static final int OTHER_READ = 04;
+    public static final int OTHER_WRITE = 02;
+    public static final int OTHER_EXEC = 01;
+    public static final int SETUID = 04000;
+    public static final int SETGID = 02000;
+    public static final int ENFORCE_FILE_LOCKING = 02000;
+    public static final int SAVE_SWAPPED_AFTER_USE = 01000;
+    public static final int SOCKET = 0140000;
+    public static final int SYMLINK = 0120000;
+    public static final int REGULAR = 0100000;
+    public static final int BLOCK_SPECIAL = 060000;
+    public static final int CHAR_SPECIAL = 020000;
+    public static final int DIRECTORY = 040000;
+    public static final int PIPE_FIFO = 010000;
     private int fileMode;
 
     public POSIXFileModesFactory() {

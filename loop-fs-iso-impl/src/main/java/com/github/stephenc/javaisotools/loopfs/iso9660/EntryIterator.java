@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2010. Stephen Connolly.
  * Copyright (c) 2006-2007. loopy project (http://loopy.sourceforge.net).
- *  
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *  
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -19,13 +19,13 @@
 
 package com.github.stephenc.javaisotools.loopfs.iso9660;
 
+import com.github.stephenc.javaisotools.loopfs.util.LittleEndian;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import com.github.stephenc.javaisotools.loopfs.util.LittleEndian;
 
 /**
  * A breadth-first iterator of the entries in a ISO9660 file system.
@@ -37,9 +37,9 @@ class EntryIterator implements Iterator<Iso9660FileEntry> {
 
     public EntryIterator(final Iso9660FileSystem fileSystem, final Iso9660FileEntry rootEntry) {
         this.fileSystem = fileSystem;
-        this.queue = new LinkedList<Iso9660FileEntry>();
+        this.queue = new LinkedList<>();
         if (rootEntry != null)
-        	this.queue.add(rootEntry);
+            this.queue.add(rootEntry);
     }
 
     public boolean hasNext() {
@@ -60,8 +60,7 @@ class EntryIterator implements Iterator<Iso9660FileEntry> {
 
             try {
                 content = this.fileSystem.getBytes(entry);
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
 

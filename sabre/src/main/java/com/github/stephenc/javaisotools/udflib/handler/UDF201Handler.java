@@ -19,27 +19,21 @@
 
 package com.github.stephenc.javaisotools.udflib.handler;
 
+import com.github.stephenc.javaisotools.sabre.ContentHandler;
+import com.github.stephenc.javaisotools.sabre.DataReference;
+import com.github.stephenc.javaisotools.sabre.HandlerException;
+import com.github.stephenc.javaisotools.sabre.StructureHandler;
+import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
+import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
+import com.github.stephenc.javaisotools.udflib.SabreUDFElement;
+import com.github.stephenc.javaisotools.udflib.structures.*;
+import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
+import com.github.stephenc.javaisotools.udflib.tools.Permissions;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
-import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
-import com.github.stephenc.javaisotools.udflib.SabreUDFElement;
-import com.github.stephenc.javaisotools.udflib.structures.ExtendedFileEntry;
-import com.github.stephenc.javaisotools.udflib.structures.Long_ad;
-import com.github.stephenc.javaisotools.udflib.structures.PartitionDescriptor;
-import com.github.stephenc.javaisotools.udflib.structures.Short_ad;
-import com.github.stephenc.javaisotools.udflib.structures.Timestamp;
-import com.github.stephenc.javaisotools.udflib.structures.VolumeRecognitionSequence;
-import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
-import com.github.stephenc.javaisotools.udflib.tools.Permissions;
-import com.github.stephenc.javaisotools.udflib.structures.FileIdentifierDescriptor;
-import com.github.stephenc.javaisotools.sabre.ContentHandler;
-import com.github.stephenc.javaisotools.sabre.StructureHandler;
 
 public class UDF201Handler extends UDF102Handler {
 
@@ -104,16 +98,13 @@ public class UDF201Handler extends UDF102Handler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -131,8 +122,7 @@ public class UDF201Handler extends UDF102Handler {
         try {
             myPartitionDescriptor.PartitionContents.setIdentifier("+NSR03");
             myPartitionDescriptor.ImplementationIdentifier.setIdentifier(applicationIdentifier);
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 
@@ -226,16 +216,13 @@ public class UDF201Handler extends UDF102Handler {
             tagLocation = BinaryTools.readUInt32AsLong(myInputStream);
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -267,8 +254,7 @@ public class UDF201Handler extends UDF102Handler {
 
         try {
             myExtendedFileEntry.ImplementationIdentifier.setIdentifier(applicationIdentifier);
-        }
-        catch (Exception myException) {
+        } catch (Exception myException) {
             throw new HandlerException(myException);
         }
 
@@ -312,16 +298,13 @@ public class UDF201Handler extends UDF102Handler {
             }
             myInputStream.close();
             myInputStream = null;
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
@@ -507,8 +490,7 @@ public class UDF201Handler extends UDF102Handler {
 
                 try {
                     childFileIdentifierDescriptor.setFileIdentifier(childFileIdentifier);
-                }
-                catch (Exception myException) {
+                } catch (Exception myException) {
                     throw new HandlerException(myException);
                 }
 
@@ -519,16 +501,13 @@ public class UDF201Handler extends UDF102Handler {
 
                 childFileIdentifierDescriptors.add(childFileIdentifierDescriptor);
             }
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }

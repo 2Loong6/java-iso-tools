@@ -21,19 +21,19 @@ package com.github.stephenc.javaisotools.iso9660.impl;
 
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFShortDataReference;
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.LSBFWordDataReference;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
-import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
 import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.Fixup;
+import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
+import com.github.stephenc.javaisotools.sabre.impl.ByteDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.ShortDataReference;
+import com.github.stephenc.javaisotools.sabre.impl.WordDataReference;
 
 public class ISO9660PathTableRecord {
 
-    private StreamHandler streamHandler;
+    private final StreamHandler streamHandler;
     private Object type;
-    private DataReference filename;
+    private final DataReference filename;
     private int parent, extAttrRecordLength;
 
     public ISO9660PathTableRecord(StreamHandler streamHandler, Object type, Object object, int parent)

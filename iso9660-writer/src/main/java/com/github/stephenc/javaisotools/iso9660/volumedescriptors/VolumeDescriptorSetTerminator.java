@@ -21,8 +21,8 @@ package com.github.stephenc.javaisotools.iso9660.volumedescriptors;
 
 import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Constants;
-import com.github.stephenc.javaisotools.sabre.StreamHandler;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
+import com.github.stephenc.javaisotools.sabre.StreamHandler;
 
 public class VolumeDescriptorSetTerminator extends ISO9660VolumeDescriptor {
 

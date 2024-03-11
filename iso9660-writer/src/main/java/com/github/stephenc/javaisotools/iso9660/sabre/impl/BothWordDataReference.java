@@ -19,15 +19,15 @@
 
 package com.github.stephenc.javaisotools.iso9660.sabre.impl;
 
+import com.github.stephenc.javaisotools.sabre.DataReference;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.github.stephenc.javaisotools.sabre.DataReference;
-
 public class BothWordDataReference implements DataReference {
 
-    private long value = 0;
+    private final long value;
 
     public BothWordDataReference(long value) {
         this.value = value;
@@ -41,7 +41,7 @@ public class BothWordDataReference implements DataReference {
         byte[] buffer = new byte[8];
 
         // MSB first (Big Endian)
-        buffer[4] = (byte) ((this.value & 0xFF000000) >> 24);
+        buffer[4] = (byte) ((this.value & 0xFF000000L) >> 24);
         buffer[5] = (byte) ((this.value & 0x00FF0000) >> 16);
         buffer[6] = (byte) ((this.value & 0x0000FF00) >> 8);
         buffer[7] = (byte) (this.value & 0x000000FF);

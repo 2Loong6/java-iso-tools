@@ -25,6 +25,14 @@ public class SabreUDFElement extends Element {
 
     private UDFElementType udfElementType;
 
+    public SabreUDFElement(UDFElementType udfElementType) {
+        this.udfElementType = udfElementType;
+    }
+
+    public Object getId() {
+        return udfElementType;
+    }
+
     public enum UDFElementType {
 
         EmptyArea,
@@ -44,14 +52,6 @@ public class SabreUDFElement extends Element {
         MetadataFile,
 
         DescriptorTag        // not used on "frontend"
-    }
-
-    public SabreUDFElement(UDFElementType udfElementType) {
-        this.udfElementType = udfElementType;
-    }
-
-    public Object getId() {
-        return udfElementType;
     }
 
 }

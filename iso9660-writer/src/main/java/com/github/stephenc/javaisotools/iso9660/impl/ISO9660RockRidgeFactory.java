@@ -21,43 +21,47 @@
 package com.github.stephenc.javaisotools.iso9660.impl;
 
 import com.github.stephenc.javaisotools.iso9660.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import com.github.stephenc.javaisotools.iso9660.sabre.impl.BothWordDataReference;
 import com.github.stephenc.javaisotools.rockridge.impl.POSIXFileMode;
 import com.github.stephenc.javaisotools.rockridge.impl.RRIPFactory;
+import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeLayoutHelper;
+import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeNamingConventions;
 import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.Fixup;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeLayoutHelper;
-import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeNamingConventions;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ISO9660RockRidgeFactory extends ISO9660Factory {
 
-    private RRIPFactory rripFactory;
-    private LinkedList unfinishedNMEntries;
-    private RockRidgeLayoutHelper helper;
-    private ISO9660RootDirectory rripRoot;
-    private HashMap originalParentMapper, parentLocationFixups, parentLocations, childLocationFixups, childLocations;
     private final Map<String, Integer> fileModesMap;
+    private final RRIPFactory rripFactory;
+    private final LinkedList unfinishedNMEntries;
+    private final RockRidgeLayoutHelper helper;
+    private final ISO9660RootDirectory rripRoot;
+    private final HashMap originalParentMapper;
+    private HashMap parentLocationFixups;
+    private HashMap parentLocations;
+    private HashMap childLocationFixups;
+    private HashMap childLocations;
 
     public ISO9660RockRidgeFactory(StreamHandler streamHandler, StandardConfig config, LayoutHelper helper,
                                    ISO9660RootDirectory root, ISO9660RootDirectory isoRoot, HashMap volumeFixups, Map<String, Integer> fileModesMap) {
         super(streamHandler, config, helper, isoRoot, volumeFixups);
         this.rripFactory = new RRIPFactory(streamHandler);
-        this.unfinishedNMEntries = new LinkedList();
+        this.unfinishedNMEntries = new LinkedList<>();
 
         // Use a copy of the original root for Rock Ridge
         rripRoot = (ISO9660RootDirectory) root.clone();
         this.helper = new RockRidgeLayoutHelper(streamHandler, isoRoot, rripRoot);
 
-        originalParentMapper = new HashMap();
+        originalParentMapper = new HashMap<>();
         this.fileModesMap = fileModesMap;
     }
 
@@ -67,19 +71,19 @@ public class ISO9660RockRidgeFactory extends ISO9660Factory {
         NamingConventions namingConventions = helper.getNamingConventions();
         namingConventions.processDirectory(rripRoot);
 
-        Iterator sit = rripRoot.unsortedIterator();
+        Iterator<ISO9660Directory> sit = rripRoot.unsortedIterator();
         while (sit.hasNext()) {
-            ISO9660Directory dir = (ISO9660Directory) sit.next();
+            ISO9660Directory dir = sit.next();
             namingConventions.processDirectory(dir);
         }
     }
 
     public void relocateDirectories() {
         if (rripRoot.deepLevelCount() >= 8) {
-            parentLocationFixups = new HashMap();
-            parentLocations = new HashMap();
-            childLocationFixups = new HashMap();
-            childLocations = new HashMap();
+            parentLocationFixups = new HashMap<>();
+            parentLocations = new HashMap<>();
+            childLocationFixups = new HashMap<>();
+            childLocations = new HashMap<>();
             rripRoot.setMovedDirectoryStore();
 
             if (RockRidgeNamingConventions.HIDE_MOVED_DIRECTORIES_STORE
@@ -108,14 +112,14 @@ public class ISO9660RockRidgeFactory extends ISO9660Factory {
 
     public void doDRA() throws HandlerException {
         super.doDRA();
-        if (originalParentMapper.size() > 0) {
+        if (!originalParentMapper.isEmpty()) {
             doRelocationFixups();
         }
         doCA();
     }
 
     void doDir(ISO9660Directory dir, HashMap parentMapper) throws HandlerException {
-        Integer location = new Integer(helper.getCurrentLocation());
+        Integer location = helper.getCurrentLocation();
 
         if (originalParentMapper.containsKey(dir)) {
             // Remember directory location for PL Location Fixup
@@ -305,7 +309,7 @@ public class ISO9660RockRidgeFactory extends ISO9660Factory {
         if (rest >= filename.getLength() + RRIPFactory.NM_ENTRY_LENGTH) {
             // Filename fits into this System Use Area
             rripFactory.doNMEntry(0, filename);
-            lengthToAdd += filename.getLength();
+            lengthToAdd += (int) filename.getLength();
         } else {
             // Filename exceeds space left -> Continuation Area needed
             int prefixLength = rest - (RRIPFactory.NM_ENTRY_LENGTH + RRIPFactory.CE_ENTRY_LENGTH);
@@ -333,7 +337,7 @@ public class ISO9660RockRidgeFactory extends ISO9660Factory {
             // Write ST entry if at least 4 bytes are left
             length = doST(length);
         }
-        memory.put("drLength", new Integer(length));
+        memory.put("drLength", length);
         return memory;
     }
 
@@ -351,13 +355,12 @@ public class ISO9660RockRidgeFactory extends ISO9660Factory {
     }
 
     private void doRelocationFixups(HashMap fixups, HashMap locations) throws HandlerException {
-        Iterator it = fixups.keySet().iterator();
-        while (it.hasNext()) {
-            ISO9660Directory dir = (ISO9660Directory) it.next();
+        for (Object o : fixups.keySet()) {
+            ISO9660Directory dir = (ISO9660Directory) o;
 
             // Write and close Location Fixup
             Fixup locationFixup = (Fixup) fixups.get(dir);
-            int location = ((Integer) locations.get(dir)).intValue();
+            int location = (Integer) locations.get(dir);
             locationFixup.data(new BothWordDataReference(location));
             locationFixup.close();
         }
@@ -386,9 +389,8 @@ public class ISO9660RockRidgeFactory extends ISO9660Factory {
 
         // Process unfinished NM Entries
         int offset = erLength;
-        Iterator it = unfinishedNMEntries.iterator();
-        while (it.hasNext()) {
-            UnfinishedNMEntry unfinishedNMEntry = (UnfinishedNMEntry) it.next();
+        for (Object nmEntry : unfinishedNMEntries) {
+            UnfinishedNMEntry unfinishedNMEntry = (UnfinishedNMEntry) nmEntry;
             String name = unfinishedNMEntry.filenameRest;
             rripFactory.doNMEntry(0, helper.getFilenameDataReference(name));
 
@@ -415,9 +417,9 @@ public class ISO9660RockRidgeFactory extends ISO9660Factory {
 
     private POSIXFileMode getPOSIXFileModeForObject(ISO9660HierarchyObject ho) {
         final POSIXFileMode ret = new POSIXFileMode();
-        
+
         // Try to see if we can match the object name against one of the matchers
-        for(String pattern:fileModesMap.keySet()) {
+        for (String pattern : fileModesMap.keySet()) {
             Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
             Matcher m = p.matcher(ho.getName());
             if (m.matches()) {
@@ -427,13 +429,13 @@ public class ISO9660RockRidgeFactory extends ISO9660Factory {
                 return mode;
             }
         }
-        
+
         // If not, return the default mode object
         ret.setDefault(ho instanceof ISO9660Directory);
         return ret;
     }
-    
-    class UnfinishedNMEntry {
+
+    static class UnfinishedNMEntry {
 
         Fixup location, offset, length;
         String filenameRest;

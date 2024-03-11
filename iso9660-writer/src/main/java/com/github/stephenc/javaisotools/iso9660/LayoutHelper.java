@@ -25,9 +25,9 @@ import com.github.stephenc.javaisotools.sabre.StreamHandler;
 
 public abstract class LayoutHelper {
 
-    private StreamHandler streamHandler;
-    private ISO9660RootDirectory root;
-    private NamingConventions namingConventions;
+    private final StreamHandler streamHandler;
+    private final ISO9660RootDirectory root;
+    private final NamingConventions namingConventions;
 
     public LayoutHelper(StreamHandler streamHandler, ISO9660RootDirectory root, NamingConventions namingConventions) {
         this.streamHandler = streamHandler;
@@ -41,8 +41,7 @@ public abstract class LayoutHelper {
 
     public int getCurrentLocation() throws HandlerException {
         long position = streamHandler.mark();
-        int location = (int) (position / ISO9660Constants.LOGICAL_BLOCK_SIZE);
-        return location;
+        return (int) (position / ISO9660Constants.LOGICAL_BLOCK_SIZE);
     }
 
     public int getDifferenceTo(long position) throws HandlerException {

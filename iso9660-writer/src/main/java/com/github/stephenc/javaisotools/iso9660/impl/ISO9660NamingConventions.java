@@ -19,12 +19,12 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.util.Vector;
-
 import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
 import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.NamingConventions;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
+
+import java.util.Vector;
 
 public class ISO9660NamingConventions extends NamingConventions {
 
@@ -51,7 +51,7 @@ public class ISO9660NamingConventions extends NamingConventions {
             filename = filename.substring(0, MAX_DIRECTORY_LENGTH);
         }
 
-        if (filename.length() == 0) {
+        if (filename.isEmpty()) {
             throw new HandlerException(getID() + ": Empty directory name encountered.");
         }
 
@@ -73,7 +73,7 @@ public class ISO9660NamingConventions extends NamingConventions {
         String extension = normalize(file.getExtension());
         file.enforceDotDelimiter(FORCE_DOT_DELIMITER);
 
-        if (filename.length() == 0 && extension.length() == 0) {
+        if (filename.isEmpty() && extension.isEmpty()) {
             throw new HandlerException(getID() + ": Empty file name encountered.");
         }
 
@@ -145,7 +145,7 @@ public class ISO9660NamingConventions extends NamingConventions {
         return name.replaceAll("[*/:;?\\\\]", "_");
     }
 
-    public void addDuplicate(Vector duplicates, String name, int version) {
+    public void addDuplicate(Vector<String[]> duplicates, String name, int version) {
         String[] data = {name.toUpperCase(), version + ""};
         duplicates.add(data);
     }

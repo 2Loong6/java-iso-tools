@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2010. Stephen Connolly.
  * Copyright (c) 2006-2007. loopy project (http://loopy.sourceforge.net).
- *  
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *  
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -19,14 +19,17 @@
 
 package com.github.stephenc.javaisotools.loopfs.iso9660;
 
+import com.github.stephenc.javaisotools.loopfs.util.BigEndian;
+import com.github.stephenc.javaisotools.loopfs.util.LittleEndian;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import com.github.stephenc.javaisotools.loopfs.util.BigEndian;
-import com.github.stephenc.javaisotools.loopfs.util.LittleEndian;
-
 public final class Util {
+
+    private Util() {
+    }
 
     /**
      * Gets an unsigned 8-bit value LSB first. See section 7.1.1.
@@ -104,8 +107,7 @@ public final class Util {
     public static String getAChars(byte[] block, int pos, int length, String encoding) {
         try {
             return new String(block, pos - 1, length, encoding).trim();
-        }
-        catch (UnsupportedEncodingException ex) {
+        } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -116,8 +118,7 @@ public final class Util {
     public static String getDChars(byte[] block, int pos, int length, String encoding) {
         try {
             return new String(block, pos - 1, length, encoding).trim();
-        }
-        catch (UnsupportedEncodingException ex) {
+        } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -139,8 +140,7 @@ public final class Util {
     private static int toInt(byte[] block, int pos, int len) {
         try {
             return Integer.parseInt(new String(block, pos, len));
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return 0;
         }
     }
@@ -164,17 +164,14 @@ public final class Util {
             return "GMT";
         }
 
-        StringBuffer buf = new StringBuffer("GMT");
-        buf.append((b < 0) ? '-' : '+');
+        StringBuilder builder = new StringBuilder("GMT");
+        builder.append((b < 0) ? '-' : '+');
 
         int posMinutes = Math.abs(b) * 15;
         int hours = posMinutes / 60;
         int minutes = posMinutes % 60;
-        buf.append(hours).append(':').append((0 == minutes) ? "00" : String.valueOf(minutes));
+        builder.append(hours).append(':').append((0 == minutes) ? "00" : String.valueOf(minutes));
 
-        return buf.toString();
-    }
-
-    private Util() {
+        return builder.toString();
     }
 }

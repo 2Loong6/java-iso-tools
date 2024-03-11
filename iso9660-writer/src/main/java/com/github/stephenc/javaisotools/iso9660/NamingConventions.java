@@ -19,20 +19,15 @@
 
 package com.github.stephenc.javaisotools.iso9660;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import com.github.stephenc.javaisotools.sabre.HandlerException;
+
+import java.util.*;
 
 public abstract class NamingConventions {
 
     public static boolean VERBOSE = false;
-    private static HashMap extensionMapper;
-    private String id;
+    private static Map<String, String> extensionMapper;
+    private final String id;
 
     public NamingConventions(String id) {
         this.id = id;
@@ -40,13 +35,9 @@ public abstract class NamingConventions {
         addExtensionMapping("tar.bz2", "tbz");
     }
 
-    public String getID() {
-        return id;
-    }
-
     public static void addExtensionMapping(String extension, String mapping) {
         if (extensionMapper == null) {
-            extensionMapper = new HashMap();
+            extensionMapper = new HashMap<>();
         }
 
         if (!extensionMapper.containsKey(extension)) {
@@ -59,7 +50,11 @@ public abstract class NamingConventions {
             return null;
         }
 
-        return (String) extensionMapper.get(extension);
+        return extensionMapper.get(extension);
+    }
+
+    public String getID() {
+        return id;
     }
 
     public void startRenaming(ISO9660Directory dir) {
@@ -113,12 +108,12 @@ public abstract class NamingConventions {
 
     public void incrementFilename(ISO9660Directory dir) throws HandlerException {
         String filename = dir.getName();
-        if (filename.length() > 0) {
+        if (!filename.isEmpty()) {
             int number = -1;
             int position = filename.length() - 1;
             while (position >= 0) {
                 try {
-                    number = Integer.parseInt(filename.substring(position, filename.length()));
+                    number = Integer.parseInt(filename.substring(position));
                     position--;
                 } catch (NumberFormatException e) {
                     break;
@@ -141,7 +136,7 @@ public abstract class NamingConventions {
                 apply(copy);
                 if (checkFilenameEquality(copy.getName(), filename)) {
                     // Adding the number did not change the filename -> replace last character
-                    filename = filename.substring(0, filename.length()) + "2";
+                    filename = filename + "2";
                 } else {
                     filename = copy.getName();
                 }
@@ -155,12 +150,12 @@ public abstract class NamingConventions {
 
     public void incrementFilename(ISO9660File file) throws HandlerException {
         String filename = file.getFilename();
-        if (filename.length() > 0) {
+        if (!filename.isEmpty()) {
             int number = -1;
             int position = filename.length() - 1;
             while (position >= 0) {
                 try {
-                    number = Integer.parseInt(filename.substring(position, filename.length()));
+                    number = Integer.parseInt(filename.substring(position));
                     position--;
                 } catch (NumberFormatException e) {
                     break;
@@ -188,7 +183,7 @@ public abstract class NamingConventions {
                 apply(copy);
                 if (checkFilenameEquality(copy.getFilename(), filename)) {
                     // Adding the number did not change the filename -> replace last character
-                    filename = filename.substring(0, filename.length()) + "2";
+                    filename = filename + "2";
                 } else {
                     filename = copy.getFilename();
                 }
@@ -205,10 +200,10 @@ public abstract class NamingConventions {
     }
 
     public void processDirectory(ISO9660Directory dir) throws HandlerException {
-        List<String[]> duplicates = new ArrayList<String[]>();
+        List<String[]> duplicates = new ArrayList<>();
 
         // Prepare files and directories to be processed in sorted order
-        List<ISO9660HierarchyObject> contents = new ArrayList<ISO9660HierarchyObject>();
+        List<ISO9660HierarchyObject> contents = new ArrayList<>();
         contents.addAll(dir.getDirectories());
         contents.addAll(dir.getFiles());
         Collections.sort(contents);
@@ -216,8 +211,7 @@ public abstract class NamingConventions {
         boolean duplicate;
         for (ISO9660HierarchyObject object : contents) {
             duplicate = false;
-            if (object instanceof ISO9660Directory) {
-                ISO9660Directory subdir = (ISO9660Directory) object;
+            if (object instanceof ISO9660Directory subdir) {
                 apply(subdir);
                 while (checkDuplicate(duplicates, subdir.getName(), -1)) {
                     incrementFilename(subdir);
@@ -228,8 +222,7 @@ public abstract class NamingConventions {
                 }
                 addDuplicate(duplicates, subdir.getName(), -1);
                 checkPathLength(subdir.getISOPath());
-            } else if (object instanceof ISO9660File) {
-                ISO9660File file = (ISO9660File) object;
+            } else if (object instanceof ISO9660File file) {
                 apply(file);
                 while (checkDuplicate(duplicates, file.getName(), file.getVersion())) {
                     incrementFilename(file);

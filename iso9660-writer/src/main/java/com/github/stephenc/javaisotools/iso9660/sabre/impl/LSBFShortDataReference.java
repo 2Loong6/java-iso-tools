@@ -19,15 +19,15 @@
 
 package com.github.stephenc.javaisotools.iso9660.sabre.impl;
 
+import com.github.stephenc.javaisotools.sabre.DataReference;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.github.stephenc.javaisotools.sabre.DataReference;
-
 public class LSBFShortDataReference implements DataReference {
 
-    private long value = 0;
+    private final long value;
 
     public LSBFShortDataReference(long value) {
         this.value = value;

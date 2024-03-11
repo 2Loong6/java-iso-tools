@@ -19,20 +19,20 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.io.FileNotFoundException;
-
+import com.github.stephenc.javaisotools.eltorito.impl.ElToritoConfig;
 import com.github.stephenc.javaisotools.eltorito.impl.ElToritoHandler;
 import com.github.stephenc.javaisotools.iso9660.ISO9660RootDirectory;
+import com.github.stephenc.javaisotools.joliet.impl.JolietConfig;
 import com.github.stephenc.javaisotools.joliet.impl.JolietHandler;
 import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeConfig;
-import com.github.stephenc.javaisotools.sabre.StreamHandler;
-import com.github.stephenc.javaisotools.eltorito.impl.ElToritoConfig;
-import com.github.stephenc.javaisotools.joliet.impl.JolietConfig;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
+import com.github.stephenc.javaisotools.sabre.StreamHandler;
+
+import java.io.FileNotFoundException;
 
 public class CreateISO {
 
-    private ISO9660RootDirectory root;
+    private final ISO9660RootDirectory root;
     private StreamHandler streamHandler;
 
     public CreateISO(StreamHandler streamHandler, ISO9660RootDirectory root) throws FileNotFoundException {

@@ -19,19 +19,18 @@
 
 package com.github.stephenc.javaisotools.udflib.structures;
 
+import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
-
 public class ExtendedFileEntry extends FileEntry {
 
+    public static int fixedPartLength = 224;
     public long ObjectSize;                        // Uint64 !
     public Timestamp CreationTime;                    // struct timestamp
-    byte Reserved[];                        // byte[4]
     public Long_ad StreamDirectoryICB;                // struct long_ad
-
-    public static int fixedPartLength = 224;
+    byte Reserved[];                        // byte[4]
 
     public ExtendedFileEntry() {
         super();

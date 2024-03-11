@@ -20,11 +20,11 @@
 package com.github.stephenc.javaisotools.udflib.handler;
 
 import com.github.stephenc.javaisotools.sabre.ContentHandler;
-import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
 import com.github.stephenc.javaisotools.sabre.DataReference;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StructureHandler;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
+import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
 
 public class PaddingHandler extends ChainingStreamHandler {
 

@@ -19,12 +19,12 @@
 
 package com.github.stephenc.javaisotools.iso9660;
 
+import com.github.stephenc.javaisotools.sabre.HandlerException;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.github.stephenc.javaisotools.sabre.HandlerException;
 
 public abstract class StandardConfig {
 
@@ -56,7 +56,7 @@ public abstract class StandardConfig {
      * @return Vector of all active metadata files
      */
     public List<ISO9660File> getFiles() {
-        List<ISO9660File> files = new ArrayList<ISO9660File>();
+        List<ISO9660File> files = new ArrayList<>();
 
         if (publisher instanceof ISO9660File) {
             files.add((ISO9660File) publisher);
@@ -88,7 +88,6 @@ public abstract class StandardConfig {
      * Set Abstract file
      *
      * @param abstractFile File containing Abstract information (to be recorded in root directory)
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void setAbstractFile(File abstractFile) throws HandlerException {
@@ -108,7 +107,6 @@ public abstract class StandardConfig {
      * Set Bibliographic file
      *
      * @param bibFile File containing Bibliographic information (to be recorded in root directory)
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void setBibFile(File bibFile) throws HandlerException {
@@ -128,7 +126,6 @@ public abstract class StandardConfig {
      * Set Copyright file
      *
      * @param copyrightFile File containing Copyright information (to be recorded in root directory)
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void setCopyrightFile(File copyrightFile) throws HandlerException {
@@ -148,7 +145,6 @@ public abstract class StandardConfig {
      * Set Volume Sequence Number
      *
      * @param volSeqNo Volume Sequence Number
-     *
      * @throws ConfigException Invalid number
      */
     public void setVolumeSequenceNumber(int volSeqNo) throws ConfigException {
@@ -171,7 +167,6 @@ public abstract class StandardConfig {
      * Set Volume Set Identifier
      *
      * @param volumeSetID Volume Set Identifier
-     *
      * @throws ConfigException String too long
      */
     public void setVolumeSetID(String volumeSetID) throws ConfigException {
@@ -194,7 +189,6 @@ public abstract class StandardConfig {
      * Set Volume Set Size
      *
      * @param volSetSize Volume Set Size
-     *
      * @throws ConfigException Invalid number
      */
     public void setVolumeSetSize(int volSetSize) throws ConfigException {
@@ -217,7 +211,6 @@ public abstract class StandardConfig {
      * Set Application Identifier
      *
      * @param app Application Identifier
-     *
      * @throws ConfigException String too long
      */
     public void setApp(String app) throws ConfigException {
@@ -231,7 +224,6 @@ public abstract class StandardConfig {
      * Set Application Identifier
      *
      * @param app File containing information on the Application
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void setApp(File app) throws HandlerException {
@@ -269,7 +261,6 @@ public abstract class StandardConfig {
      * Set Data Preparer
      *
      * @param dataPreparer Data Preparer of the volume
-     *
      * @throws ConfigException String too long
      */
     public void setDataPreparer(String dataPreparer) throws ConfigException {
@@ -283,7 +274,6 @@ public abstract class StandardConfig {
      * Set Data Preparer
      *
      * @param dataPreparer File containing information on the volume data preparer
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void setDataPreparer(File dataPreparer) throws HandlerException {
@@ -357,7 +347,6 @@ public abstract class StandardConfig {
      * Set Publisher
      *
      * @param publisher Publisher of the volume
-     *
      * @throws ConfigException String too long
      */
     public void setPublisher(String publisher) throws ConfigException {
@@ -371,7 +360,6 @@ public abstract class StandardConfig {
      * Set Publisher
      *
      * @param publisher File containing information on the volume publisher
-     *
      * @throws HandlerException Problems converting to ISO9660File
      */
     public void setPublisher(File publisher) throws HandlerException {
@@ -391,7 +379,6 @@ public abstract class StandardConfig {
      * Set System Identifier
      *
      * @param systemID Identifier for the system that can act upon the System Area
-     *
      * @throws ConfigException String too long
      */
     public void setSystemID(String systemID) throws ConfigException {
@@ -414,7 +401,6 @@ public abstract class StandardConfig {
      * Set Volume Identifier
      *
      * @param volumeID Identifier for the volume (disc name)
-     *
      * @throws ConfigException String too long
      */
     public void setVolumeID(String volumeID) throws ConfigException {
@@ -422,5 +408,5 @@ public abstract class StandardConfig {
             throw new ConfigException(this, "The Volume Identifier may be no longer than 32 characters.");
         }
         this.volumeID = volumeID;
-	}
+    }
 }

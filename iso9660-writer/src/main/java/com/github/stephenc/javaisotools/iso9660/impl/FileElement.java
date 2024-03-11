@@ -23,7 +23,7 @@ import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 
 public class FileElement extends LogicalSectorElement {
 
-    private ISO9660File file;
+    private final ISO9660File file;
 
     public FileElement(ISO9660File file) {
         super("FILE");

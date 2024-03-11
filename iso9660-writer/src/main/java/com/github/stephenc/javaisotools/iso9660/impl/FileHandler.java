@@ -19,22 +19,19 @@
 
 package com.github.stephenc.javaisotools.iso9660.impl;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import com.github.stephenc.javaisotools.iso9660.ISO9660Directory;
 import com.github.stephenc.javaisotools.iso9660.ISO9660File;
 import com.github.stephenc.javaisotools.iso9660.ISO9660RootDirectory;
+import com.github.stephenc.javaisotools.sabre.Element;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
-import com.github.stephenc.javaisotools.sabre.impl.FileDataReference;
-import com.github.stephenc.javaisotools.sabre.Element;
 import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
+
+import java.util.Iterator;
 
 public class FileHandler extends ChainingStreamHandler {
 
-    private ISO9660RootDirectory root;
+    private final ISO9660RootDirectory root;
 
     public FileHandler(StreamHandler streamHandler, ISO9660RootDirectory root) {
         super(streamHandler, streamHandler);

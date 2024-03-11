@@ -20,21 +20,20 @@
 package com.github.stephenc.javaisotools.joliet.impl;
 
 import com.github.stephenc.javaisotools.iso9660.ConfigException;
-import com.github.stephenc.javaisotools.iso9660.NamingConventions;
-import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 import com.github.stephenc.javaisotools.iso9660.StandardConfig;
+import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 
 public class JolietConfig extends StandardConfig {
 
-    private static byte[][] UCS2_LEVEL_ESCAPE_SEQUENCES = {
+    private static final byte[][] UCS2_LEVEL_ESCAPE_SEQUENCES = {
             {0x25, 0x2F, 0x40},
             {0x25, 0x2F, 0x43},
             {0x25, 0x2F, 0x45}};
     int ucs2_level;
-    
-	private int maxCharsInFilename = 64;
-	
-	private boolean failOnTruncation;
+
+    private int maxCharsInFilename = 64;
+
+    private boolean failOnTruncation;
 
     public JolietConfig() {
         super();
@@ -54,10 +53,18 @@ public class JolietConfig extends StandardConfig {
     }
 
     /**
+     * Returns active UCS-2 Level
+     *
+     * @return Active UCS-2 level
+     */
+    public int getUCS2Level() {
+        return ucs2_level;
+    }
+
+    /**
      * Set UCS-2 Level
      *
      * @param level 1, 2 or 3
-     *
      * @throws ConfigException Invalid UCS-2 level
      * @see <a href="http://www.nada.kth.se/i18n/ucs/unicode-iso10646-oview.html">link</a>
      */
@@ -66,15 +73,6 @@ public class JolietConfig extends StandardConfig {
             throw new ConfigException(this, "Invalid UCS-2 level: " + level);
         }
         this.ucs2_level = level;
-    }
-
-    /**
-     * Returns active UCS-2 Level
-     *
-     * @return Active UCS-2 level
-     */
-    public int getUCS2Level() {
-        return ucs2_level;
     }
 
     /**
@@ -128,19 +126,19 @@ public class JolietConfig extends StandardConfig {
         super.setVolumeID(volumeID);
     }
 
-	public int getMaxCharsInFilename() {
-		return maxCharsInFilename;
-	}
-	
-	public void setMaxCharsInFilename(int maxCharsInFilename) {
-		this.maxCharsInFilename = maxCharsInFilename;
-	}
+    public int getMaxCharsInFilename() {
+        return maxCharsInFilename;
+    }
 
-	public boolean getFailOnTruncation() {
-		return failOnTruncation;
-	}
-	
-	public void setFailOnTruncation(boolean failOnTruncation) {
-		this.failOnTruncation = failOnTruncation;
-	}
+    public void setMaxCharsInFilename(int maxCharsInFilename) {
+        this.maxCharsInFilename = maxCharsInFilename;
+    }
+
+    public boolean getFailOnTruncation() {
+        return failOnTruncation;
+    }
+
+    public void setFailOnTruncation(boolean failOnTruncation) {
+        this.failOnTruncation = failOnTruncation;
+    }
 }

@@ -23,8 +23,8 @@ import com.github.stephenc.javaisotools.sabre.Element;
 
 public class SystemUseEntryElement extends Element {
 
-    private String signature;
-    private int version;
+    private final String signature;
+    private final int version;
 
     public SystemUseEntryElement(String signature, int version) {
         this.signature = signature;

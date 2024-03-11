@@ -19,11 +19,11 @@
 
 package com.github.stephenc.javaisotools.udflib.structures;
 
-import java.io.UnsupportedEncodingException;
-
 import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
 import com.github.stephenc.javaisotools.udflib.tools.Checksum;
 import com.github.stephenc.javaisotools.udflib.tools.OSTAUnicode;
+
+import java.io.UnsupportedEncodingException;
 
 public class FileIdentifierDescriptor {
 
@@ -148,8 +148,7 @@ public class FileIdentifierDescriptor {
             int compId = OSTAUnicode.getBestCompressionId(fileIdentiferBytes);
 
             FileIdentifier = OSTAUnicode.CompressUnicodeByte(fileIdentiferBytes, compId);
-        }
-        catch (UnsupportedEncodingException uee) {
+        } catch (UnsupportedEncodingException uee) {
         } // never happens
 
         LengthofFileIdentifier = (short) FileIdentifier.length;

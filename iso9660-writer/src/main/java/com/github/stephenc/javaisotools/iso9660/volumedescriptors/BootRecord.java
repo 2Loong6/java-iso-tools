@@ -19,12 +19,12 @@
 
 package com.github.stephenc.javaisotools.iso9660.volumedescriptors;
 
-import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 import com.github.stephenc.javaisotools.iso9660.BootConfig;
 import com.github.stephenc.javaisotools.iso9660.LayoutHelper;
 import com.github.stephenc.javaisotools.iso9660.impl.ISO9660Constants;
+import com.github.stephenc.javaisotools.sabre.HandlerException;
 import com.github.stephenc.javaisotools.sabre.StreamHandler;
+import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 
 public class BootRecord extends ISO9660VolumeDescriptor {
 
@@ -33,14 +33,6 @@ public class BootRecord extends ISO9660VolumeDescriptor {
     public BootRecord(StreamHandler streamHandler, LayoutHelper helper) {
         super(streamHandler, ISO9660Constants.BR_TYPE, helper);
         this.bootSystemId = this.bootId = "";
-    }
-
-    public void setBootId(String bootId) {
-        this.bootId = bootId;
-    }
-
-    public void setBootSystemId(String bootSystemId) {
-        this.bootSystemId = bootSystemId;
     }
 
     public void setMetadata(BootConfig config) {
@@ -72,8 +64,16 @@ public class BootRecord extends ISO9660VolumeDescriptor {
         return new ByteArrayDataReference(bytes);
     }
 
+    public void setBootSystemId(String bootSystemId) {
+        this.bootSystemId = bootSystemId;
+    }
+
     private ByteArrayDataReference getBootId() throws HandlerException {
         byte[] bytes = helper.pad(bootId, 32);
         return new ByteArrayDataReference(bytes);
+    }
+
+    public void setBootId(String bootId) {
+        this.bootId = bootId;
     }
 }

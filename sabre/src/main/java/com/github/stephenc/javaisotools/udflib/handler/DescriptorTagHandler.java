@@ -19,21 +19,17 @@
 
 package com.github.stephenc.javaisotools.udflib.handler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Stack;
-
-import com.github.stephenc.javaisotools.sabre.ContentHandler;
-import com.github.stephenc.javaisotools.sabre.Element;
-import com.github.stephenc.javaisotools.sabre.HandlerException;
+import com.github.stephenc.javaisotools.sabre.*;
 import com.github.stephenc.javaisotools.sabre.impl.ByteArrayDataReference;
 import com.github.stephenc.javaisotools.sabre.impl.ChainingStreamHandler;
+import com.github.stephenc.javaisotools.udflib.SabreUDFElement.UDFElementType;
 import com.github.stephenc.javaisotools.udflib.structures.Tag;
 import com.github.stephenc.javaisotools.udflib.tools.BinaryTools;
 import com.github.stephenc.javaisotools.udflib.tools.Checksum;
-import com.github.stephenc.javaisotools.udflib.SabreUDFElement.UDFElementType;
-import com.github.stephenc.javaisotools.sabre.DataReference;
-import com.github.stephenc.javaisotools.sabre.StructureHandler;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Stack;
 
 public class DescriptorTagHandler extends ChainingStreamHandler {
 
@@ -97,16 +93,13 @@ public class DescriptorTagHandler extends ChainingStreamHandler {
             myInputStream.close();
             myInputStream = null;
 
-        }
-        catch (IOException myIOException) {
+        } catch (IOException myIOException) {
             throw new HandlerException(myIOException);
-        }
-        finally {
+        } finally {
             if (myInputStream != null) {
                 try {
                     myInputStream.close();
-                }
-                catch (IOException myIOException) {
+                } catch (IOException myIOException) {
                 }
             }
         }
